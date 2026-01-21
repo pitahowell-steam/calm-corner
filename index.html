@@ -5,42 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kawaii Calm Sanctuary</title>
     <style>
-        :root { --soft-pink: #FFB7B2; --soft-blue: #B2CEFE; --night-blue: #0A192F; --text: #444; }
+        /* --- CUSTOMIZABLE COLORS & VARIABLES --- */
+        :root { 
+            --soft-pink: #FFB7B2; 
+            --soft-blue: #B2CEFE; 
+            --night-blue: #0A192F; 
+            --garden-green: #E2F0CB;
+            --text-dark: #444; 
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, sans-serif; overflow: hidden; background: #FDFCF0; }
         
-        /* Layering */
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            overflow: hidden; background: #FDFCF0; 
+        }
+        
+        /* --- BACKGROUND LAYER --- */
         .bg-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-size: cover; background-position: center; transition: all 1s ease; }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle 2s infinite alternate; }
         @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
 
-        /* Navigation & Screens */
+        /* --- SCREEN MANAGEMENT --- */
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; z-index: 10; padding: 20px; }
         .active { display: flex; }
 
-        /* UI Elements - Matches your Stylesheet */
-        .glass-card { background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 30px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .scene-card { background: white; width: 90%; max-width: 350px; padding: 18px; border-radius: 25px; margin-bottom: 12px; border: 3px solid #EEE; display: flex; align-items: center; cursor: pointer; transition: 0.2s; }
-        .scene-card:active { transform: scale(0.97); }
+        /* --- UI CARDS & BUTTONS --- */
+        .glass-card { background: var(--glass); padding: 25px; border-radius: 30px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         
+        .scene-card { 
+            background: white; width: 90%; max-width: 350px; padding: 18px; border-radius: 25px; 
+            margin-bottom: 12px; border: 3px solid #EEE; display: flex; align-items: center; 
+            cursor: pointer; transition: 0.2s; font-weight: bold; color: var(--text-dark);
+        }
+        .scene-card:active { transform: scale(0.97); }
+
         .pill-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
-        .pill { background: #F0F0F0; padding: 10px 18px; border-radius: 20px; font-weight: 600; color: #666; cursor: pointer; }
-        .pill.selected { color: white; }
+        .pill { background: #F0F0F0; padding: 10px 18px; border-radius: 20px; font-weight: 600; color: #666; cursor: pointer; transition: 0.3s; }
 
-        input, textarea { width: 100%; padding: 15px; border: 1px solid #DDD; border-radius: 15px; font-size: 16px; margin: 10px 0; outline: none; }
-        .main-btn { color: white; padding: 15px 40px; border-radius: 30px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 15px; border: 1px solid #DDD; border-radius: 15px; font-size: 16px; margin: 10px 0; outline: none; background: white; }
+        
+        .main-btn { color: white; padding: 15px 40px; border-radius: 30px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .main-btn:active { transform: scale(0.95); opacity: 0.9; }
 
-        /* Breathing */
-        #breath-wrap { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }
-        #target-circle { position: absolute; width: 200px; height: 200px; border-radius: 50%; border: 4px solid; opacity: 0.2; }
-        #breath-circle { width: 200px; height: 200px; border-radius: 50%; transition: transform 4s ease-in-out; }
+        /* --- BREATHING ANIMATION SYSTEM --- */
+        #breath-wrap { position: relative; width: 250px; height: 250px; display: flex; align-items: center; justify-content: center; }
+        
+        /* The static "target" circle */
+        #target-circle { 
+            position: absolute; width: 220px; height: 220px; border-radius: 50%; 
+            border: 4px solid rgba(255,255,255,0.2); z-index: 5;
+        }
 
-        /* Inventory Grid */
+        /* The circle that actually moves */
+        #breath-circle { 
+            width: 100px; height: 100px; border-radius: 50%; 
+            transform: scale(1); /* Initial State */
+            transition: transform 100ms linear; /* Will be updated by JS */
+        }
+
+        /* --- INVENTORY GRID (Serene Scene) --- */
         .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px; overflow-y: auto; height: 60vh; width: 100%; }
-        .item-container { position: relative; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; font-size: 40px; cursor: pointer; }
+        .item-container { position: relative; width: 95px; height: 95px; display: flex; align-items: center; justify-content: center; font-size: 40px; cursor: pointer; }
         .pop-circle { position: absolute; width: 85px; height: 85px; border-radius: 50%; background: rgba(255,255,255,0.3); border: 2px solid rgba(255,255,255,0.5); z-index: -1; }
         
+        /* --- JOURNAL & REPORT STYLES --- */
         .journal-entry { background: #F9F9F9; padding: 15px; border-radius: 20px; margin-bottom: 10px; display: flex; align-items: center; width: 100%; text-align: left; }
+        .stat-card { background: white; padding: 15px; border-radius: 20px; width: 48%; text-align: center; border: 1px solid #EEE; }
     </style>
 </head>
 <body>
@@ -49,8 +82,8 @@
 
     <div id="login-screen" class="screen active">
         <div class="glass-card">
-            <h1 style="font-size: 32px; color: var(--text);">Kawaii Calm</h1>
-            <input type="text" id="name-input" placeholder="Enter Name">
+            <h1 style="font-size: 32px; color: var(--text-dark);">Kawaii Calm</h1>
+            <input type="text" id="name-input" placeholder="Student Name">
             <button class="main-btn" style="background: var(--soft-blue);" onclick="login()">Enter Sanctuary</button>
         </div>
     </div>
@@ -59,19 +92,19 @@
         <div style="background: white; padding: 8px 20px; border-radius: 20px; margin-bottom: 15px; font-weight: bold; color: #666;">
             Hello, <span id="user-display"></span> ✨
         </div>
-        <div style="margin-bottom: 15px;">
-            <span style="color:#888; font-weight:bold;">🏆 Points: <span id="points-display">0</span></span>
-            <span style="margin-left:15px; color:#F48FB1; font-weight:bold; cursor:pointer;" onclick="location.reload()">🔄 Switch User</span>
+        <div style="flex-direction: row; display: flex; gap: 15px; margin-bottom: 15px;">
+            <span style="color:#888; font-weight:bold; cursor:pointer;" onclick="showTeacherReport()">🏆 Points: <span id="points-display">0</span></span>
+            <span style="color:#F48FB1; font-weight:bold; cursor:pointer;" onclick="location.reload()">🔄 Switch User</span>
         </div>
         
-        <div class="scene-card" style="border-color: #FFB7B2;" onclick="setTheme('garden')">
-            <span style="font-size: 30px; margin-right: 15px;">🌸</span> <b>Garden Sanctuary</b>
+        <div class="scene-card" style="border-color: var(--soft-pink);" onclick="setTheme('garden')">
+            <span style="font-size: 30px; margin-right: 15px;">🌸</span> Garden Sanctuary
         </div>
-        <div class="scene-card" style="border-color: #B2CEFE;" onclick="setTheme('beach')">
-            <span style="font-size: 30px; margin-right: 15px;">🏖️</span> <b>Beach Sanctuary</b>
+        <div class="scene-card" style="border-color: var(--soft-blue);" onclick="setTheme('beach')">
+            <span style="font-size: 30px; margin-right: 15px;">🏖️</span> Beach Sanctuary
         </div>
         <div class="scene-card" style="border-color: #4A90E2;" onclick="setTheme('night')">
-            <span style="font-size: 30px; margin-right: 15px;">🌌</span> <b>Night Sanctuary</b>
+            <span style="font-size: 30px; margin-right: 15px;">🌌</span> Night Sanctuary
         </div>
         
         <button style="margin-top:20px; background:none; border:none; color:#4A90E2; font-weight:bold; cursor:pointer;" onclick="showJournal()">📖 View Zen Journal</button>
@@ -79,15 +112,15 @@
 
     <div id="before-screen" class="screen">
         <div class="glass-card">
-            <p style="color:#666; font-weight:bold;">Current Feeling:</p>
+            <h3 style="margin-top:0;">Current Feeling:</h3>
             <div id="before-pills" class="pill-container"></div>
             <input type="text" id="before-custom" placeholder="Or type your own...">
             <button id="start-btn" class="main-btn" onclick="startBreath()">Start Breath</button>
         </div>
     </div>
 
-    <div id="breath-screen" class="screen" style="background: rgba(0,0,0,0.7);">
-        <h1 id="breath-text" style="color:white; margin-bottom:40px;">Breathe In...</h1>
+    <div id="breath-screen" class="screen" style="background: rgba(0,0,0,0.8);">
+        <h1 id="breath-text" style="color:white; margin-bottom:50px; font-size: 32px; transition: 0.5s;">Get Ready...</h1>
         <div id="breath-wrap">
             <div id="target-circle"></div>
             <div id="breath-circle"></div>
@@ -96,40 +129,55 @@
 
     <div id="after-screen" class="screen">
         <div class="glass-card">
-            <p style="color:#666; font-weight:bold;">Feeling now:</p>
+            <h3 style="margin-top:0;">Feeling now:</h3>
             <div id="after-pills" class="pill-container"></div>
             <input type="text" id="after-custom" placeholder="Type feeling...">
-            <button id="finish-btn" class="main-btn" onclick="handleResult()">Check Results</button>
+            <button id="finish-btn" class="main-btn" onclick="handleLogicFlip()">Check Results</button>
         </div>
     </div>
 
     <div id="reward-screen" class="screen">
-        <div class="glass-card" id="reward-content"></div>
+        <div class="glass-card" id="reward-content">
+            </div>
     </div>
 
     <div id="collection-screen" class="screen">
-        <div id="master-bubble" style="background:white; padding:20px; border-radius:25px; width:85%; border:2px solid; margin-bottom:20px; text-align:center;">
+        <div id="master-bubble" style="background:white; padding:20px; border-radius:25px; width:85%; border:3px solid; margin-bottom:20px; text-align:center; font-weight: 600;">
             Tap your items to ground yourself...
         </div>
         <div class="grid" id="inventory-grid"></div>
         <button class="main-btn" id="final-back" onclick="showScreen('home-screen')">Finish</button>
     </div>
 
+    <div id="report-screen" class="screen" style="background:#F0F4F8;">
+        <h1 style="color:var(--text-dark)">Progress Report</h1>
+        <div style="display:flex; width: 100%; max-width:400px; justify-content: space-between; margin-bottom: 20px;">
+            <div class="stat-card"><h2 id="stat-total" style="margin:0; color:#4A90E2;">0</h2><small>SESSIONS</small></div>
+            <div class="stat-card"><h2 id="stat-missions" style="margin:0; color:#4CAF50;">0</h2><small>MISSIONS</small></div>
+        </div>
+        <div class="glass-card" style="text-align: left;">
+            <p><b>Note for Teacher:</b> Student is engaging well with breathing techniques.</p>
+        </div>
+        <button class="main-btn" style="background:#444; margin-top:20px;" onclick="showScreen('home-screen')">Close</button>
+    </div>
+
     <div id="journal-screen" class="screen" style="background:white;">
-        <h1 style="color:var(--text)">Zen Journal</h1>
+        <h1 style="color:var(--text-dark)">Zen Journal</h1>
         <div id="journal-list" style="width:100%; overflow-y:auto; flex:1; padding:10px;"></div>
         <button class="main-btn" style="background:#444; margin:20px;" onclick="showScreen('home-screen')">Close</button>
     </div>
 
     <script>
-        // --- DATA FROM YOUR ORIGINAL CODE ---
+        /* --- DATA CONSTANTS --- */
         const SUGGESTED_BEFORE = ["Overwhelmed", "Disrespected", "Drained", "Hyped", "Stressed", "Frustrated"];
         const SUGGESTED_AFTER = ["Steady", "Stronger", "Relaxed", "Focused", "Better", "In Control"];
+        
         const MICRO_MISSIONS = [
-            { task: "Find 3 blue things in the room.", q: "What 3 blue things did you find?" },
-            { task: "Notice your feet on the floor.", q: "Did the floor feel solid, cold, or warm?" },
-            { task: "Unclench your jaw.", q: "Does your face feel softer now?" }
+            { task: "Find 3 blue things in the room.", q: "What did you find?" },
+            { task: "Notice your feet on the floor.", q: "Does the floor feel cold or warm?" },
+            { task: "Unclench your jaw.", q: "Does your face feel softer?" }
         ];
+
         const REWARDS = [
             { emoji: "🐢", name: "Patience Turtle", msg: "Slow and steady is a superpower." },
             { emoji: "🐱", name: "Lucky Cat", msg: "A friend to watch over your peace." },
@@ -137,6 +185,7 @@
             { emoji: "☁️", name: "Happy Cloud", msg: "Feelings pass by just like clouds." }
         ];
 
+        /* --- STATE VARIABLES --- */
         let currentUser = "";
         let inventory = [];
         let totalSessions = 0;
@@ -144,127 +193,194 @@
         let beforeMood = "";
         let afterMood = "";
 
-        // --- CORE FUNCTIONS ---
+        /* --- SCREEN CONTROLLER --- */
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
+        /* --- LOGIN & SAVE SYSTEM --- */
         function login() {
-            currentUser = document.getElementById('name-input').value.trim().toLowerCase();
+            const input = document.getElementById('name-input');
+            currentUser = input.value.trim().toLowerCase();
             if(!currentUser) return;
+
             const saved = localStorage.getItem('@kawaii_' + currentUser);
-            const data = saved ? JSON.parse(saved) : { inventory: [], total: 0 };
-            inventory = data.inventory;
-            totalSessions = data.total;
+            if(saved) {
+                const parsed = JSON.parse(saved);
+                inventory = parsed.inventory || [];
+                totalSessions = parsed.total || 0;
+            } else {
+                inventory = [];
+                totalSessions = 0;
+            }
+
             document.getElementById('user-display').innerText = currentUser;
             document.getElementById('points-display').innerText = totalSessions;
             showScreen('home-screen');
         }
 
+        function saveToStorage() {
+            const data = { inventory: inventory, total: totalSessions };
+            localStorage.setItem('@kawaii_' + currentUser, JSON.stringify(data));
+        }
+
+        /* --- THEME & SCENE PICKER --- */
         function setTheme(theme) {
             selectedTheme.id = theme;
             const bg = document.getElementById('bg-layer');
-            bg.innerHTML = '';
+            bg.innerHTML = ''; // Clear stars
+
             if(theme === 'garden') {
                 selectedTheme.color = '#FFB7B2';
                 bg.style.backgroundImage = "url('https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80&w=500')";
             } else if(theme === 'beach') {
                 selectedTheme.color = '#B2CEFE';
                 bg.style.backgroundImage = "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=500')";
-            } else {
+            } else if(theme === 'night') {
                 selectedTheme.color = '#4A90E2';
-                bg.style.backgroundColor = '#0A192F'; bg.style.backgroundImage = "none";
+                bg.style.backgroundColor = '#0A192F';
+                bg.style.backgroundImage = "none";
+                // Add Stars
                 for(let i=0; i<40; i++) {
-                    let s = document.createElement('div'); s.className = 'star';
+                    let s = document.createElement('div');
+                    s.className = 'star';
                     s.style.width = s.style.height = Math.random()*3+'px';
-                    s.style.top = Math.random()*100+'%'; s.style.left = Math.random()*100+'%';
+                    s.style.top = Math.random()*100+'%';
+                    s.style.left = Math.random()*100+'%';
                     bg.appendChild(s);
                 }
             }
-            setupPills();
+            prepareSession();
+        }
+
+        function prepareSession() {
+            // Setup Mood Pills
+            const bPills = document.getElementById('before-pills');
+            bPills.innerHTML = SUGGESTED_BEFORE.map(m => `<div class="pill" onclick="selectPill(this, 'before')">${m}</div>`).join('');
+            
+            const aPills = document.getElementById('after-pills');
+            aPills.innerHTML = SUGGESTED_AFTER.map(m => `<div class="pill" onclick="selectPill(this, 'after')">${m}</div>`).join('');
+            
+            document.getElementById('start-btn').style.background = selectedTheme.color;
+            document.getElementById('finish-btn').style.background = selectedTheme.color;
+            
             showScreen('before-screen');
         }
 
-        function setupPills() {
-            const bPills = document.getElementById('before-pills');
-            bPills.innerHTML = SUGGESTED_BEFORE.map(m => `<div class="pill" onclick="selPill(this, 'before')">${m}</div>`).join('');
-            const aPills = document.getElementById('after-pills');
-            aPills.innerHTML = SUGGESTED_AFTER.map(m => `<div class="pill" onclick="selPill(this, 'after')">${m}</div>`).join('');
-            document.getElementById('start-btn').style.background = selectedTheme.color;
-            document.getElementById('finish-btn').style.background = selectedTheme.color;
-        }
-
-        function selPill(el, type) {
-            el.parentElement.querySelectorAll('.pill').forEach(p => { p.classList.remove('selected'); p.style.background = '#F0F0F0'; });
-            el.classList.add('selected');
+        function selectPill(el, type) {
+            el.parentElement.querySelectorAll('.pill').forEach(p => {
+                p.style.background = '#F0F0F0';
+                p.style.color = '#666';
+            });
             el.style.background = selectedTheme.color;
-            if(type === 'before') beforeMood = el.innerText; else afterMood = el.innerText;
+            el.style.color = 'white';
+            if(type === 'before') {
+                beforeMood = el.innerText;
+                document.getElementById('before-custom').value = el.innerText;
+            } else {
+                afterMood = el.innerText;
+                document.getElementById('after-custom').value = el.innerText;
+            }
         }
 
+        /* --- ADVANCED BREATHING ENGINE (The Fix) --- */
         function startBreath() {
             showScreen('breath-screen');
             const circle = document.getElementById('breath-circle');
-            const target = document.getElementById('target-circle');
             const txt = document.getElementById('breath-text');
-            circle.style.background = target.style.borderColor = selectedTheme.color;
+            circle.style.backgroundColor = selectedTheme.color;
             
-            let steps = [
-                {t: "Breathe In...", s: 1.5, d: 4000},
-                {t: "Hold...", s: 1.5, d: 2000},
-                {t: "Breathe Out...", s: 0.2, d: 6000},
-                {t: "Rest...", s: 0.2, d: 2000}
+            // Patterns: Text, Scale Value, Duration in ms
+            const cycles = [
+                {t: "Breathe In...", s: 2.2, d: 4000},
+                {t: "Hold...", s: 2.2, d: 2000},
+                {t: "Breathe Out...", s: 0.8, d: 6000},
+                {t: "Rest...", s: 0.8, d: 2000}
             ];
-            
-            let step = 0;
-            function run() {
-                if(step >= steps.length) { showScreen('after-screen'); return; }
-                txt.innerText = steps[step].t;
-                circle.style.transition = `transform ${steps[step].d}ms ease-in-out`;
-                circle.style.transform = `scale(${steps[step].s})`;
-                setTimeout(() => { step++; run(); }, steps[step].d);
+
+            let currentStep = 0;
+
+            function runStep() {
+                if(currentStep >= cycles.length) {
+                    showScreen('after-screen');
+                    return;
+                }
+
+                let step = cycles[currentStep];
+                txt.innerText = step.t;
+                
+                // Trigger CSS Transition
+                circle.style.transition = `transform ${step.d}ms ease-in-out`;
+                circle.style.transform = `scale(${step.s})`;
+
+                setTimeout(() => {
+                    currentStep++;
+                    runStep();
+                }, step.d);
             }
-            run();
+
+            // Small delay to let screen load
+            setTimeout(runStep, 500);
         }
 
-        function handleResult() {
+        /* --- REWARD & MISSION LOGIC --- */
+        function handleLogicFlip() {
+            totalSessions++;
             const isMission = Math.random() > 0.5;
             const content = document.getElementById('reward-content');
-            totalSessions++;
             
+            // Get final moods
+            beforeMood = document.getElementById('before-custom').value || "Unknown";
+            afterMood = document.getElementById('after-custom').value || "Relaxed";
+
             if(isMission) {
-                let m = MICRO_MISSIONS[Math.floor(Math.random()*MICRO_MISSIONS.length)];
-                content.innerHTML = `<p style="color:#4CAF50; font-weight:bold;">🧘 MICROMISSION</p>
-                <h2>${m.task}</h2><p>${m.q}</p>
-                <textarea id="refl" placeholder="Your reflection..."></textarea>
-                <button class="main-btn" style="background:#4CAF50" onclick="saveSession('mission', '${m.task}')">Done</button>`;
+                const m = MICRO_MISSIONS[Math.floor(Math.random()*MICRO_MISSIONS.length)];
+                content.innerHTML = `
+                    <p style="color:#4CAF50; font-weight:bold;">🧘 MICROMISSION</p>
+                    <h2 style="margin:10px 0;">${m.task}</h2>
+                    <p>${m.q}</p>
+                    <textarea id="mission-input" placeholder="Your reflection..."></textarea>
+                    <button class="main-btn" style="background:#4CAF50" onclick="completeMission('${m.task}')">Done</button>
+                `;
                 inventory.unshift({ type: 'mission', emoji: '🏅', name: 'Medal', message: m.task, date: new Date().toLocaleDateString(), before: beforeMood, after: afterMood });
             } else {
-                let r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
-                content.innerHTML = `<div style="font-size:80px;">${r.emoji}</div><h2>${r.name}</h2><p>${r.msg}</p>
-                <button class="main-btn" style="background:${selectedTheme.color}" onclick="openCollection()">Interact</button>`;
+                const r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
+                content.innerHTML = `
+                    <div style="font-size:80px;">${r.emoji}</div>
+                    <h2>${r.name}</h2>
+                    <p style="font-style:italic; color:#666;">"${r.msg}"</p>
+                    <button class="main-btn" style="background:${selectedTheme.color}" onclick="openCollection()">Interact</button>
+                `;
                 inventory.unshift({ type: 'reward', emoji: r.emoji, name: r.name, message: r.msg, date: new Date().toLocaleDateString(), before: beforeMood, after: afterMood });
             }
-            localStorage.setItem('@kawaii_' + currentUser, JSON.stringify({inventory, total: totalSessions}));
+            
             document.getElementById('points-display').innerText = totalSessions;
+            saveToStorage();
             showScreen('reward-screen');
         }
 
-        function saveSession(type, msg) {
-            if(type === 'mission') inventory[0].userReflection = document.getElementById('refl').value;
-            localStorage.setItem('@kawaii_' + currentUser, JSON.stringify({inventory, total: totalSessions}));
+        function completeMission(task) {
+            const val = document.getElementById('mission-input').value;
+            inventory[0].reflection = val;
+            saveToStorage();
             showScreen('home-screen');
         }
 
+        /* --- COLLECTION & JOURNAL VIEWS --- */
         function openCollection() {
             const grid = document.getElementById('inventory-grid');
             const bubble = document.getElementById('master-bubble');
             bubble.style.borderColor = selectedTheme.color;
+            
+            // Only show items that are "Rewards"
             grid.innerHTML = inventory.filter(i => i.type === 'reward').map(i => `
                 <div class="item-container" onclick="document.getElementById('master-bubble').innerText='${i.message}'">
                     <div class="pop-circle"></div>
                     ${i.emoji}
-                </div>`).join('');
+                </div>
+            `).join('');
+            
             document.getElementById('final-back').style.background = selectedTheme.color;
             showScreen('collection-screen');
         }
@@ -278,11 +394,19 @@
                         <div style="display:flex; justify-content:space-between; font-size:12px; color:#888;">
                             <b>${i.name}</b> <span>${i.date}</span>
                         </div>
-                        <div style="font-size:10px; color:#AAA;">${i.before || '---'} ➔ ${i.after || '---'}</div>
-                        <div style="font-size:14px; color:#666; font-style:italic;">${i.message}</div>
+                        <div style="font-size:10px; color:#AAA; font-weight:bold; margin-bottom:5px;">${i.before.toUpperCase()} ➔ ${i.after.toUpperCase()}</div>
+                        <div style="font-size:14px; color:#444;">${i.message}</div>
+                        ${i.reflection ? `<div style="font-size:12px; color:#888; margin-top:5px; padding-left:5px; border-left: 2px solid #EEE;">Note: ${i.reflection}</div>` : ''}
                     </div>
-                </div>`).join('');
+                </div>
+            `).join('');
             showScreen('journal-screen');
+        }
+
+        function showTeacherReport() {
+            document.getElementById('stat-total').innerText = totalSessions;
+            document.getElementById('stat-missions').innerText = inventory.filter(i => i.type === 'mission').length;
+            showScreen('report-screen');
         }
     </script>
 </body>
