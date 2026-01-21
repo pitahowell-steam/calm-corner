@@ -5,96 +5,243 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kawaii Calm Sanctuary</title>
     <style>
-        :root { --soft-pink: #FFB7B2; --soft-blue: #B2CEFE; --bg-color: #FDFCF0; }
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); overflow: hidden; }
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; }
-        .active { display: flex; }
-        
-        /* UI Elements */
-        .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-align: center; width: 80%; max-width: 400px; }
-        h1 { color: #444; margin-bottom: 20px; }
-        input { width: 90%; padding: 15px; border: 2px solid #EEE; border-radius: 15px; font-size: 18px; margin-bottom: 20px; outline: none; }
-        .btn { background: var(--soft-blue); color: white; padding: 15px 40px; border-radius: 30px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
-        .btn:active { transform: scale(0.95); }
+        :root {
+            --garden-bg: #E2F0CB; --garden-accent: #FFB7B2;
+            --beach-bg: #B2E2F2; --beach-accent: #B2CEFE;
+            --night-bg: #0A192F; --night-accent: #4A90E2;
+            --white: rgba(255, 255, 255, 0.9);
+        }
 
-        /* Breathing Animation */
-        #breath-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--soft-blue); transition: all 4s ease-in-out; }
-        .expand { transform: scale(1.8); }
-        .shrink { transform: scale(1); }
-        #breath-text { font-size: 24px; font-weight: bold; margin-bottom: 40px; color: #555; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #FDFCF0; transition: background 0.5s; }
+        
+        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; z-index: 10; }
+        .active { display: flex; }
+
+        /* Background Effects */
+        #bg-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 1s; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle 2s infinite alternate; }
+        @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
+
+        /* UI Cards */
+        .glass-card { background: var(--white); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .scene-btn { background: white; width: 90%; padding: 15px; border-radius: 20px; margin: 10px 0; border: 3px solid transparent; display: flex; align-items: center; cursor: pointer; transition: 0.2s; }
+        .scene-btn:active { transform: scale(0.98); }
+
+        /* Input & Buttons */
+        input { width: 80%; padding: 15px; border: 2px solid #EEE; border-radius: 15px; font-size: 18px; margin: 20px 0; outline: none; }
+        .main-btn { background: #B2CEFE; color: white; padding: 15px 40px; border-radius: 30px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; }
+
+        /* Breathing */
+        #breath-circle { width: 160px; height: 160px; border-radius: 50%; background: var(--garden-accent); transition: transform 4s ease-in-out; }
+        .pill-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
+        .pill { background: #EEE; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer; }
+        .pill.selected { background: #4A90E2; color: white; }
+
+        /* Collection Grid */
+        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px; overflow-y: auto; height: 60vh; }
+        .item { font-size: 40px; width: 70px; height: 70px; background: rgba(255,255,255,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+        
+        #message-bubble { background: white; padding: 15px; border-radius: 20px; margin-bottom: 20px; width: 80%; border: 2px solid #B2CEFE; text-align: center; min-height: 40px; }
+        .journal-list { text-align: left; width: 100%; max-height: 300px; overflow-y: auto; }
     </style>
 </head>
 <body>
 
+    <div id="bg-layer"></div>
+
     <div id="login-screen" class="screen active">
-        <div class="card">
-            <h1>Kawaii Calm</h1>
-            <input type="text" id="student-name" placeholder="Student Name">
-            <button class="btn" onclick="goToHome()">Enter Sanctuary</button>
+        <div class="glass-card">
+            <h1 style="font-size: 32px; color: #444;">Kawaii Calm</h1>
+            <input type="text" id="name-input" placeholder="Student Name">
+            <button class="main-btn" onclick="login()">Enter Sanctuary</button>
         </div>
     </div>
 
     <div id="home-screen" class="screen">
-        <h1 id="welcome-msg">Hello! ✨</h1>
-        <div class="card" onclick="startSession()">
-            <div style="font-size: 50px;">🌸</div>
-            <h2>Start a Calm Session</h2>
-            <p>Take a moment for yourself.</p>
+        <div style="background: white; padding: 5px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold;">
+            Hello, <span id="user-display"></span> ✨
+        </div>
+        <div class="scene-btn" style="border-color: var(--garden-accent);" onclick="selectScene('garden')">
+            <span style="font-size: 30px; margin-right: 15px;">🌸</span> <b>Garden Sanctuary</b>
+        </div>
+        <div class="scene-btn" style="border-color: var(--beach-accent);" onclick="selectScene('beach')">
+            <span style="font-size: 30px; margin-right: 15px;">🏖️</span> <b>Beach Sanctuary</b>
+        </div>
+        <div class="scene-btn" style="border-color: var(--night-accent);" onclick="selectScene('night')">
+            <span style="font-size: 30px; margin-right: 15px;">🌌</span> <b>Night Sanctuary</b>
+        </div>
+        <button style="margin-top:20px; background:none; border:none; color:#4A90E2; font-weight:bold; cursor:pointer;" onclick="showJournal()">📖 View Zen Journal</button>
+    </div>
+
+    <div id="before-screen" class="screen">
+        <div class="glass-card">
+            <h3>How are you feeling?</h3>
+            <div class="pill-container" id="before-pills"></div>
+            <input type="text" id="before-custom" placeholder="Or type here...">
+            <button class="main-btn" id="start-breath-btn" onclick="startBreathing()">Start Breathing</button>
         </div>
     </div>
 
     <div id="breath-screen" class="screen">
-        <div id="breath-text">Get Ready...</div>
+        <h2 id="breath-text" style="color: #444; margin-bottom: 40px;">Get Ready...</h2>
         <div id="breath-circle"></div>
     </div>
 
-    <script>
-        let userName = "";
+    <div id="after-screen" class="screen">
+        <div class="glass-card">
+            <h3>How do you feel now?</h3>
+            <div class="pill-container" id="after-pills"></div>
+            <button class="main-btn" onclick="finishSession()">Get Result</button>
+        </div>
+    </div>
 
-        function showScreen(screenId) {
+    <div id="reward-screen" class="screen">
+        <div class="glass-card" id="reward-content">
+            </div>
+    </div>
+
+    <div id="collection-screen" class="screen">
+        <div id="message-bubble">Tap your items to ground yourself...</div>
+        <div class="grid" id="inventory-grid"></div>
+        <button class="main-btn" style="margin-top: 20px;" onclick="showScreen('home-screen')">Finish</button>
+    </div>
+
+    <div id="journal-screen" class="screen">
+        <div class="glass-card">
+            <h2>Zen Journal</h2>
+            <div class="journal-list" id="journal-entries"></div>
+            <button class="main-btn" style="margin-top: 20px;" onclick="showScreen('home-screen')">Back</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = "";
+        let selectedMoodBefore = "";
+        let selectedMoodAfter = "";
+        let inventory = [];
+        let currentTheme = 'garden';
+
+        const REWARDS = [
+            { emoji: "🐢", name: "Patience Turtle", msg: "Slow and steady is a superpower." },
+            { emoji: "🐱", name: "Lucky Cat", msg: "A friend to watch over your peace." },
+            { emoji: "☁️", name: "Happy Cloud", msg: "Feelings pass by just like clouds." },
+            { emoji: "🌙", name: "Silver Moon", msg: "Your light shines even in the dark." }
+        ];
+
+        const MISSIONS = [
+            { task: "Find 3 blue things in the room.", q: "What did you find?" },
+            { task: "Drop your shoulders heavy.", q: "Does your neck feel better?" },
+            { task: "Notice your feet on the floor.", q: "Is the floor cold or warm?" }
+        ];
+
+        function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            document.getElementById(id).classList.add('active');
         }
 
-        function goToHome() {
-            userName = document.getElementById('student-name').value || "Friend";
-            document.getElementById('welcome-msg').innerText = "Hello, " + userName + " ✨";
+        function login() {
+            currentUser = document.getElementById('name-input').value.trim().toLowerCase();
+            if (!currentUser) return;
+            const saved = localStorage.getItem('@kawaii_' + currentUser);
+            inventory = saved ? JSON.parse(saved) : [];
+            document.getElementById('user-display').innerText = currentUser;
             showScreen('home-screen');
         }
 
-        function startSession() {
+        function selectScene(scene) {
+            currentTheme = scene;
+            const bg = document.getElementById('bg-layer');
+            bg.innerHTML = '';
+            if (scene === 'night') {
+                bg.style.background = '#0A192F';
+                for(let i=0; i<30; i++) {
+                    let s = document.createElement('div');
+                    s.className = 'star';
+                    s.style.width = s.style.height = Math.random()*3+'px';
+                    s.style.top = Math.random()*100+'%';
+                    s.style.left = Math.random()*100+'%';
+                    bg.appendChild(s);
+                }
+            } else {
+                bg.style.background = scene === 'garden' ? '#E2F0CB' : '#B2E2F2';
+            }
+            setupPills();
+            showScreen('before-screen');
+        }
+
+        function setupPills() {
+            const container = document.getElementById('before-pills');
+            const moods = ["Stressed", "Tired", "Angry", "Hyper", "Sad"];
+            container.innerHTML = moods.map(m => `<div class="pill" onclick="selectMood(this, 'before')">${m}</div>`).join('');
+            document.getElementById('after-pills').innerHTML = ["Better", "Calm", "Steady", "Focused"].map(m => `<div class="pill" onclick="selectMood(this, 'after')">${m}</div>`).join('');
+        }
+
+        function selectMood(el, type) {
+            el.parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+            if (type === 'before') selectedMoodBefore = el.innerText;
+            else selectedMoodAfter = el.innerText;
+        }
+
+        function startBreathing() {
             showScreen('breath-screen');
-            let cycle = 0;
             const circle = document.getElementById('breath-circle');
             const text = document.getElementById('breath-text');
-
-            function runBreath() {
-                if (cycle >= 2) {
-                    showScreen('home-screen');
-                    return;
-                }
-                
-                // Breathe In
-                text.innerText = "Breathe In...";
-                circle.style.transition = "all 4s ease-in-out";
-                circle.classList.add('expand');
-                
-                setTimeout(() => {
-                    text.innerText = "Hold...";
-                    setTimeout(() => {
-                        text.innerText = "Breathe Out...";
-                        circle.style.transition = "all 6s ease-in-out";
-                        circle.classList.remove('expand');
-                        setTimeout(() => {
-                            text.innerText = "Rest...";
-                            cycle++;
-                            setTimeout(runBreath, 2000);
-                        }, 6000);
-                    }, 2000);
-                }, 4000);
+            let steps = [
+                {t: "Breathe In...", s: 1.8, d: 4000},
+                {t: "Hold...", s: 1.8, d: 2000},
+                {t: "Breathe Out...", s: 1, d: 6000},
+                {t: "Rest...", s: 1, d: 2000}
+            ];
+            
+            let currentStep = 0;
+            function run() {
+                if (currentStep >= steps.length) { showScreen('after-screen'); return; }
+                let s = steps[currentStep];
+                text.innerText = s.t;
+                circle.style.transition = `transform ${s.d}ms ease-in-out`;
+                circle.style.transform = `scale(${s.s})`;
+                setTimeout(() => { currentStep++; run(); }, s.d);
             }
+            run();
+        }
 
-            setTimeout(runBreath, 1000);
+        async function finishSession() {
+            const lastType = inventory.length > 0 ? inventory[0].type : 'mission';
+            const content = document.getElementById('reward-content');
+            
+            if (lastType === 'reward') {
+                let m = MISSIONS[Math.floor(Math.random()*MISSIONS.length)];
+                content.innerHTML = `<h3>🧘 Micro Mission</h3><p style="font-size:20px;">${m.task}</p>
+                <input type="text" id="mission-ans" placeholder="${m.q}">
+                <button class="main-btn" onclick="saveEntry('mission', '${m.task}')">Done</button>`;
+                inventory.unshift({ type: 'mission', emoji: '🏅', name: 'Medal', msg: m.task, date: new Date().toLocaleDateString() });
+            } else {
+                let r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
+                content.innerHTML = `<div style="font-size:80px;">${r.emoji}</div><h2>${r.name}</h2><p>${r.msg}</p>
+                <button class="main-btn" onclick="showCollection()">Add to Collection</button>`;
+                inventory.unshift({ type: 'reward', ...r, date: new Date().toLocaleDateString() });
+            }
+            
+            localStorage.setItem('@kawaii_' + currentUser, JSON.stringify(inventory));
+            showScreen('reward-screen');
+        }
+
+        function saveEntry(type, val) {
+            showScreen('home-screen');
+        }
+
+        function showCollection() {
+            const grid = document.getElementById('inventory-grid');
+            grid.innerHTML = inventory.filter(i => i.type === 'reward').map(i => `<div class="item" onclick="document.getElementById('message-bubble').innerText='${i.msg}'">${i.emoji}</div>`).join('');
+            showScreen('collection-screen');
+        }
+
+        function showJournal() {
+            const list = document.getElementById('journal-entries');
+            list.innerHTML = inventory.map(i => `<div style="padding:10px; border-bottom:1px solid #EEE;"><b>${i.emoji} ${i.name || 'Mission'}</b><br><small>${i.date}</small></div>`).join('');
+            showScreen('journal-screen');
         }
     </script>
 </body>
