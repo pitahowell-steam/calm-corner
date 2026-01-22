@@ -5,80 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kawaii Calm Sanctuary</title>
     <style>
-        /* --- CUSTOMIZABLE THEME VARIABLES --- */
-        :root { 
-            --soft-pink: #FFB7B2; --soft-blue: #B2CEFE; --night-blue: #0A192F; 
-            --text-dark: #444; --glass: rgba(255, 255, 255, 0.96);
-        }
-
+        :root { --soft-pink: #FFB7B2; --soft-blue: #B2CEFE; --night-blue: #0A192F; --text-dark: #444; --glass: rgba(255, 255, 255, 0.96); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, sans-serif; overflow: hidden; background: #FDFCF0; color: var(--text-dark); }
-        
-        /* --- LAYERING & BACKGROUNDS --- */
         .bg-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-size: cover; background-position: center; transition: all 1.2s ease; }
-        .star { 
-            position: absolute; 
-            background: white; 
-            border-radius: 50%; 
-            opacity: 0.8; /* Made them a bit brighter */
-            animation: twinkle 2s infinite alternate; 
-            z-index: 2; /* Keeps them above the dark blue but below the UI */
-        }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.8; animation: twinkle 2s infinite alternate; z-index: 2; }
         @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
-
-        .screen { 
-    display: none; 
-    height: 100vh; 
-    width: 100vw; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
-    position: absolute; 
-    z-index: 10; 
-    padding: 20px;
-    /* Ensure no background here so transparency works */
-    background: transparent; 
-}
+        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; z-index: 10; padding: 20px; background: transparent; }
         .active { display: flex; }
-
-        /* --- UI COMPONENTS --- */
         .glass-card { background: var(--glass); padding: 30px; border-radius: 35px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.07); border: 1px solid rgba(255,255,255,0.3); }
-        .scene-card { background: white; width: 90%; max-width: 360px; padding: 20px; border-radius: 25px; margin-bottom: 12px; border: 3px solid #F0F0F0; display: flex; align-items: center; cursor: pointer; transition: 0.2s; font-weight: bold; }
-        .scene-card:active { transform: scale(0.96); }
-
+        .scene-card { background: white; width: 90%; max-width: 360px; padding: 20px; border-radius: 25px; margin-bottom: 12px; border: 3px solid #F0F0F0; display: flex; align-items: center; cursor: pointer; transition: 0.2s; font-weight: bold; justify-content: center; }
         .pill-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 15px 0; }
-        .pill { background: #F5F5F5; padding: 12px 20px; border-radius: 25px; font-weight: 600; color: #777; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
-        
+        .pill { background: #F5F5F5; padding: 12px 20px; border-radius: 25px; font-weight: 600; color: #777; cursor: pointer; border: 2px solid transparent; }
         input, textarea { width: 100%; padding: 15px; border: 2px solid #EEE; border-radius: 18px; font-size: 16px; margin: 10px 0; outline: none; background: #FAFAFA; }
-        .main-btn { color: white; padding: 16px 45px; border-radius: 35px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .main-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-
-        /* --- FIXED BREATHING ENGINE --- */
-       
-          #breath-screen { 
-            background: rgba(0, 0, 0, 0) !important; /* Forces total transparency */
-            backdrop-filter: blur(10px); 
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 100;
-            }
-
-/* Ensure the background layer stays visible */
-.bg-layer { 
-    z-index: 1; 
-}
-        #breath-text { color: white; position: relative; z-index: 200; margin-bottom: 70px; font-size: 34px; font-weight: bold; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        
+        .main-btn { color: white; padding: 16px 45px; border-radius: 35px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        #breath-screen { background: rgba(0,0,0,0) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100; }
+        #breath-text { color: white; position: relative; z-index: 200; margin-bottom: 70px; font-size: 34px; font-weight: bold; text-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; }
         #breath-wrap { position: relative; width: 320px; height: 320px; display: flex; align-items: center; justify-content: center; }
-        #target-circle { position: absolute; width: 260px; height: 260px; border-radius: 50%; border: 5px dashed rgba(255,255,255,0.2); z-index: 50; }
+        #target-circle { position: absolute; width: 260px; height: 260px; border-radius: 50%; border: 5px dashed rgba(255,255,255,0.3); z-index: 50; }
         #breath-circle { width: 100px; height: 100px; border-radius: 50%; z-index: 60; transform: scale(1); will-change: transform; }
-
-        /* --- INVENTORY & JOURNAL --- */
-        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; padding: 20px; overflow-y: auto; height: 55vh; width: 100%; }
-        .item-container { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 45px; cursor: pointer; animation: float 3s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        .pop-circle { position: absolute; width: 90px; height: 90px; border-radius: 50%; background: rgba(255,255,255,0.4); border: 2px solid rgba(255,255,255,0.6); z-index: -1; }
-        
-        .journal-entry { background: white; padding: 18px; border-radius: 25px; margin-bottom: 12px; display: flex; align-items: center; width: 100%; text-align: left; border: 1px solid #EEE; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
     </style>
 </head>
 <body>
@@ -87,35 +32,30 @@
 
     <div id="login-screen" class="screen active">
         <div class="glass-card">
-            <h1 style="font-size: 36px; margin-bottom: 10px;">✨ Kawaii Calm</h1>
-            <p style="color: #888; margin-bottom: 20px;">Welcome back to your safe space.</p>
-            <input type="text" id="name-input" placeholder="Enter Student Name...">
-            <button class="main-btn" style="background: var(--soft-blue);" onclick="login()">Enter Sanctuary</button>
+            <h1>✨ Kawaii Calm</h1>
+            <p style="color: #888;">Welcome to your safe space.</p>
+            <input type="text" id="name-input" placeholder="Enter Student Name..." autocomplete="off">
+            <button class="main-btn" id="login-trigger" style="background: #B2CEFE;">Enter Sanctuary</button>
         </div>
     </div>
 
     <div id="home-screen" class="screen">
-        <div style="background: white; padding: 10px 25px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-            Hello, <span id="user-display"></span> ✨
+        <div class="glass-card">
+            <h2 style="margin:0;">Hello, <span id="user-display"></span>!</h2>
+            <p>🏆 Points: <span id="points-display">0</span></p>
+            <div class="scene-card" style="border-color: #FFB7B2;" onclick="setTheme('garden')">🌸 Garden</div>
+            <div class="scene-card" style="border-color: #B2CEFE;" onclick="setTheme('beach')">🏖️ Beach</div>
+            <div class="scene-card" style="border-color: #4A90E2;" onclick="setTheme('night')">🌌 Night</div>
+            <button style="margin-top:15px; background:none; border:none; color:#AAA; cursor:pointer;" onclick="location.reload()">Switch User</button>
         </div>
-        <div style="display: flex; gap: 15px; margin-bottom: 25px;">
-            <span style="color:#888; font-weight:bold; cursor:pointer;" onclick="showTeacherReport()">🏆 Points: <span id="points-display">0</span></span>
-            <span style="color:#F48FB1; font-weight:bold; cursor:pointer;" onclick="location.reload()">🔄 Switch User</span>
-        </div>
-        
-        <div class="scene-card" style="border-color: var(--soft-pink);" onclick="setTheme('garden')">🌸 Garden Sanctuary</div>
-        <div class="scene-card" style="border-color: var(--soft-blue);" onclick="setTheme('beach')">🏖️ Beach Sanctuary</div>
-        <div class="scene-card" style="border-color: #4A90E2;" onclick="setTheme('night')">🌌 Night Sanctuary</div>
-        
-        <button style="margin-top:30px; background:none; border:none; color:#4A90E2; font-weight:bold; cursor:pointer; font-size: 16px;" onclick="showJournal()">📖 View Zen Journal</button>
     </div>
 
     <div id="before-screen" class="screen">
         <div class="glass-card">
-            <h2 style="margin-top:0;">How are you feeling?</h2>
+            <h2>How do you feel?</h2>
             <div id="before-pills" class="pill-container"></div>
-            <input type="text" id="before-custom" placeholder="Or describe it here...">
-            <button id="start-btn" class="main-btn" onclick="startBreath()">Start Breathing</button>
+            <input type="text" id="before-custom" placeholder="Or type it here...">
+            <button id="start-btn" class="main-btn" onclick="startBreath()">Start</button>
         </div>
     </div>
 
@@ -129,11 +69,11 @@
 
     <div id="after-screen" class="screen">
         <div class="glass-card">
-            <h2 style="margin-top:0;">Breathe complete.</h2>
+            <h2>Breathe complete.</h2>
             <p>How do you feel now?</p>
             <div id="after-pills" class="pill-container"></div>
             <input type="text" id="after-custom" placeholder="I feel...">
-            <button id="finish-btn" class="main-btn" onclick="handleLogic()">Check Results</button>
+            <button id="finish-btn" class="main-btn" onclick="handleLogic()">Get Reward</button>
         </div>
     </div>
 
@@ -141,106 +81,64 @@
         <div class="glass-card" id="reward-content"></div>
     </div>
 
-    <div id="collection-screen" class="screen">
-        <div id="master-bubble" style="background:white; padding:25px; border-radius:30px; width:85%; border:3px solid; margin-bottom:20px; text-align:center; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
-            Tap your treasures to ground yourself...
-        </div>
-        <div class="grid" id="inventory-grid"></div>
-        <button class="main-btn" id="final-back" onclick="showScreen('home-screen')">Back to Home</button>
-    </div>
-
-    <div id="report-screen" class="screen" style="background:#F0F4F8;">
-        <h1 style="color:var(--text-dark)">Teacher Dashboard</h1>
-        <div style="display:flex; width: 100%; max-width:400px; justify-content: space-between; margin-bottom: 25px;">
-            <div style="background:white; padding:20px; border-radius:25px; width:48%; text-align:center;">
-                <h2 id="stat-total" style="margin:0; color:#4A90E2;">0</h2><small>SESSIONS</small>
-            </div>
-            <div style="background:white; padding:20px; border-radius:25px; width:48%; text-align:center;">
-                <h2 id="stat-missions" style="margin:0; color:#4CAF50;">0</h2><small>MISSIONS</small>
-            </div>
-        </div>
-        <button class="main-btn" style="background:#444;" onclick="showScreen('home-screen')">Close Report</button>
-    </div>
-
-    <div id="journal-screen" class="screen" style="background:#FFF;">
-        <h1 style="color:var(--text-dark)">Your Journey</h1>
-        <div id="journal-list" style="width:100%; overflow-y:auto; flex:1; padding:20px;"></div>
-        <button class="main-btn" style="background:#444; margin-bottom:30px;" onclick="showScreen('home-screen')">Close Journal</button>
-    </div>
-
     <script>
-        /* --- CONFIGURATION DATA --- */
-        const SUGGESTED_BEFORE = ["Overwhelmed", "Frustrated", "Drained", "Tense", "Stressed", "Sad"];
-        const SUGGESTED_AFTER = ["Steady", "Relaxed", "Better", "Focused", "Stronger", "Calm"];
-        const MICRO_MISSIONS = [
-            { task: "Find 3 blue things in the room.", q: "What did you see?" },
-            { task: "Press your feet into the floor.", q: "Is it cold, warm, or soft?" },
-            { task: "Look for something shaped like a circle.", q: "What was the object?" }
-        ];
+        // --- DATA ---
+        const SUGGESTED_BEFORE = ["Drained", "Tense", "Stressed", "Sad"];
+        const SUGGESTED_AFTER = ["Steady", "Relaxed", "Better", "Calm"];
         const REWARDS = [
-            { emoji: "🐢", name: "Patience Turtle", msg: "Slow and steady is a superpower." },
-            { emoji: "🐱", name: "Lucky Cat", msg: "A friend for your peaceful moments." },
-            { emoji: "☀️", name: "Golden Sun", msg: "Your energy lights up the room." },
-            { emoji: "☁️", name: "Happy Cloud", msg: "Bad feelings pass just like clouds." }
+            { emoji: "🐢", name: "Patience Turtle" },
+            { emoji: "🐱", name: "Lucky Cat" },
+            { emoji: "☀️", name: "Golden Sun" }
         ];
 
-        /* --- STATE VARIABLES --- */
         let currentUser = "";
-        let inventory = [];
         let totalSessions = 0;
-        let selectedTheme = { id: 'garden', color: '#FFB7B2' };
-        let beforeMood = "";
-        let afterMood = "";
+        let selectedTheme = { color: '#B2CEFE' };
 
-        /* --- LOGIC FUNCTIONS --- */
+        // --- CORE NAVIGATION ---
         function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'flex';
         }
 
-        function login() {
-            const name = document.getElementById('name-input').value.trim().toLowerCase();
-            if(!name) return;
+        // --- LOGIN LOGIC ---
+        const loginBtn = document.getElementById('login-trigger');
+        const nameInput = document.getElementById('name-input');
+
+        function performLogin() {
+            const name = nameInput.value.trim();
+            if(!name) {
+                alert("Please enter a name!");
+                return;
+            }
             currentUser = name;
-            const saved = localStorage.getItem('@kawaii_' + currentUser);
-            const data = saved ? JSON.parse(saved) : { inventory: [], total: 0 };
-            inventory = data.inventory || [];
-            totalSessions = data.total || 0;
-            document.getElementById('user-display').innerText = currentUser;
-            document.getElementById('points-display').innerText = totalSessions;
+            document.getElementById('user-display').innerText = name;
             showScreen('home-screen');
         }
 
+        loginBtn.onclick = performLogin;
+        nameInput.onkeypress = (e) => { if(e.key === 'Enter') performLogin(); };
+
+        // --- THEME & PILLS ---
         function setTheme(theme) {
-            selectedTheme.id = theme;
             const bg = document.getElementById('bg-layer');
             bg.innerHTML = '';
-            
             if(theme === 'garden') {
                 selectedTheme.color = '#FFB7B2';
-                bg.style.backgroundImage = "url('https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80&w=500')";
+                bg.style.background = "#FDFCF0 url('https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80&w=500') center/cover";
             } else if(theme === 'beach') {
                 selectedTheme.color = '#B2CEFE';
-                bg.style.backgroundImage = "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=500')";
+                bg.style.background = "#E0F7FA url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=500') center/cover";
             } else {
                 selectedTheme.color = '#4A90E2';
-                const bg = document.getElementById('bg-layer');
-                // Force the night color onto the background layer itself
-                bg.style.backgroundImage = "none";
-                bg.style.backgroundColor = "#0A192F"; 
-    
-                // Clear old stars and add new ones
-                bg.innerHTML = ''; 
-                for(let i=0; i<35; i++){
-                    let s = document.createElement('div'); 
-                    s.className = 'star';
+                bg.style.background = "#0A192F";
+                for(let i=0; i<30; i++) {
+                    let s = document.createElement('div'); s.className = 'star';
                     s.style.width = s.style.height = Math.random()*3+'px';
-                    s.style.top = Math.random()*100+'%'; 
-                    s.style.left = Math.random()*100+'%';
+                    s.style.top = Math.random()*100+'%'; s.style.left = Math.random()*100+'%';
                     bg.appendChild(s);
                 }
             }
-            
             setupPills();
             showScreen('before-screen');
         }
@@ -253,134 +151,53 @@
         }
 
         function selPill(el, type) {
-            el.parentElement.querySelectorAll('.pill').forEach(p => { p.style.background = '#F5F5F5'; p.style.color = '#777'; p.style.borderColor = 'transparent'; });
-            el.style.background = 'white'; el.style.color = selectedTheme.color; el.style.borderColor = selectedTheme.color;
-            if(type === 'before') { beforeMood = el.innerText; document.getElementById('before-custom').value = el.innerText; }
-            else { afterMood = el.innerText; document.getElementById('after-custom').value = el.innerText; }
+            el.parentElement.querySelectorAll('.pill').forEach(p => p.style.borderColor = 'transparent');
+            el.style.borderColor = selectedTheme.color;
+            document.getElementById(type + '-custom').value = el.innerText;
         }
 
-        /* --- THE COMPLETED BREATHING ENGINE --- */
-function startBreath() {
-    showScreen('breath-screen');
-    const circle = document.getElementById('breath-circle');
-    const txt = document.getElementById('breath-text');
-    circle.style.backgroundColor = selectedTheme.color;
-    
-    // The specific timings for one "Round", the size of the small breathing circle is determined by the s here
-    const patterns = [
-        {t: "Breathe In...", s: 2.6, d: 4000},
-        {t: "Hold...", s: 2.6, d: 2000},
-        {t: "Breathe Out...", s: 0.4, d: 6000},
-        {t: "Rest...", s: 0.4, d: 2000}
-    ];
+        // --- BREATHING ---
+        function startBreath() {
+            showScreen('breath-screen');
+            const circle = document.getElementById('breath-circle');
+            const txt = document.getElementById('breath-text');
+            circle.style.backgroundColor = selectedTheme.color;
+            
+            const patterns = [
+                {t: "Breathe In...", s: 2.6, d: 4000},
+                {t: "Hold...", s: 2.6, d: 2000},
+                {t: "Breathe Out...", s: 0.4, d: 6000},
+                {t: "Rest...", s: 0.4, d: 2000}
+            ];
 
-    let step = 0;
-    let cycleCount = 1;
-    const totalCycles = 3; // <--- You can change this number to 5 or 10 later!
+            let step = 0;
+            let cycle = 1;
 
-    function next() {
-        // If we finished all steps in a round...
-        if (step >= patterns.length) {
-            if (cycleCount < totalCycles) {
-                // ...Start a new round
-                cycleCount++;
-                step = 0; 
-            } else {
-                // ...Or finish if we hit 3 rounds
-                showScreen('after-screen'); 
-                return;
+            function next() {
+                if (step >= patterns.length) {
+                    if (cycle < 2) { cycle++; step = 0; } 
+                    else { showScreen('after-screen'); return; }
+                }
+                txt.innerHTML = `${patterns[step].t}<br><small>Round ${cycle} of 2</small>`;
+                circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
+                circle.style.transform = `scale(${patterns[step].s})`;
+                setTimeout(() => { step++; next(); }, patterns[step].d);
             }
+            next();
         }
 
-        // Show "Breathe In (1 of 3)" etc.
-        txt.innerHTML = `${patterns[step].t} <br> <span style="font-size:18px; opacity:0.7;">Round ${cycleCount} of ${totalCycles}</span>`;
-        
-        // Execute the physical animation
-        circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
-        circle.style.transform = `scale(${patterns[step].s})`;
-
-        setTimeout(() => {
-            step++;
-            next();
-        }, patterns[step].d);
-    }
-
-    // Start the first cycle
-    setTimeout(next, 500);
-}
-
-        /* --- REWARD, MISSION, & SAVE --- */
+        // --- REWARDS ---
         function handleLogic() {
             totalSessions++;
-            const isMission = Math.random() > 0.5;
-            const content = document.getElementById('reward-content');
-            beforeMood = document.getElementById('before-custom').value || "Unknown";
-            afterMood = document.getElementById('after-custom').value || "Better";
-
-            if(isMission) {
-                const m = MICRO_MISSIONS[Math.floor(Math.random()*MICRO_MISSIONS.length)];
-                content.innerHTML = `
-                    <p style="color:#4CAF50; font-weight:bold;">🧘 GROUNDING MISSION</p>
-                    <h2>${m.task}</h2><p>${m.q}</p>
-                    <textarea id="mission-refl" placeholder="Type what you found..."></textarea>
-                    <button class="main-btn" style="background:#4CAF50" onclick="saveMission('${m.task}')">Save Mission</button>
-                `;
-                inventory.unshift({ type:'mission', emoji:'🏅', name:'Medal', message: m.task, date: new Date().toLocaleDateString(), before: beforeMood, after: afterMood });
-            } else {
-                const r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
-                content.innerHTML = `
-                    <div style="font-size:80px;">${r.emoji}</div><h2>${r.name}</h2>
-                    <p style="color:#666; font-style:italic;">"${r.msg}"</p>
-                    <button class="main-btn" style="background:${selectedTheme.color}" onclick="openCollection()">Collect & View</button>
-                `;
-                inventory.unshift({ type:'reward', emoji:r.emoji, name: r.name, message: r.msg, date: new Date().toLocaleDateString(), before: beforeMood, after: afterMood });
-            }
-            save();
-            showScreen('reward-screen');
-        }
-
-        function saveMission(task) {
-            inventory[0].reflection = document.getElementById('mission-refl').value;
-            save(); showScreen('home-screen');
-        }
-
-        function save() {
-            localStorage.setItem('@kawaii_' + currentUser, JSON.stringify({inventory, total: totalSessions}));
             document.getElementById('points-display').innerText = totalSessions;
-        }
-
-        function openCollection() {
-            const grid = document.getElementById('inventory-grid');
-            document.getElementById('master-bubble').style.borderColor = selectedTheme.color;
-            grid.innerHTML = inventory.filter(i => i.type === 'reward').map(i => `
-                <div class="item-container" onclick="document.getElementById('master-bubble').innerText='${i.message}'">
-                    <div class="pop-circle"></div>${i.emoji}
-                </div>`).join('');
-            document.getElementById('final-back').style.background = selectedTheme.color;
-            showScreen('collection-screen');
-        }
-
-        function showJournal() {
-            const list = document.getElementById('journal-list');
-            list.innerHTML = inventory.map(i => `
-                <div class="journal-entry">
-                    <div style="font-size:35px; margin-right:15px;">${i.emoji}</div>
-                    <div style="flex:1">
-                        <div style="display:flex; justify-content:space-between; font-size:12px; color:#999; margin-bottom:4px;">
-                            <b>${i.name}</b> <span>${i.date}</span>
-                        </div>
-                        <div style="font-size:11px; font-weight:bold; color:${selectedTheme.color};">${i.before.toUpperCase()} ➔ ${i.after.toUpperCase()}</div>
-                        <div style="font-size:14px; margin-top:5px; color:#555;">${i.message}</div>
-                        ${i.reflection ? `<div style="font-size:13px; color:#888; background:#F9F9F9; padding:8px; border-radius:10px; margin-top:8px;">"${i.reflection}"</div>` : ''}
-                    </div>
-                </div>`).join('');
-            showScreen('journal-screen');
-        }
-
-        function showTeacherReport() {
-            document.getElementById('stat-total').innerText = totalSessions;
-            document.getElementById('stat-missions').innerText = inventory.filter(i => i.type === 'mission').length;
-            showScreen('report-screen');
+            const r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
+            const content = document.getElementById('reward-content');
+            content.innerHTML = `
+                <div style="font-size:70px;">${r.emoji}</div>
+                <h2>You found a ${r.name}!</h2>
+                <button class="main-btn" style="background:#444;" onclick="showScreen('home-screen')">Back Home</button>
+            `;
+            showScreen('reward-screen');
         }
     </script>
 </body>
