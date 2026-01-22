@@ -201,23 +201,51 @@
             showScreen('breath-screen');
             const circle = document.getElementById('breath-circle');
             const txt = document.getElementById('breath-text');
+    
+            // Reset size and color
             circle.style.backgroundColor = selectedTheme.color;
-            const patterns = [{t: "In...", s: 2.6, d: 4000}, {t: "Hold", s: 2.6, d: 2000}, {t: "Out...", s: 0.4, d: 6000}, {t: "Rest", s: 0.4, d: 2000}];
-            let step = 0, cycle = 1;
-
-            function next() {
-                if (step >= patterns.length) {
-                    if (cycle < 2) { cycle++; step = 0; } 
-                    else { showScreen('after-screen'); return; }
+            circle.style.transform = "scale(1)";
+    
+        const patterns = [
+            {t: "Breathe In...", s: 2.6, d: 4000}, 
+            {t: "Hold...", s: 2.6, d: 2000}, 
+            {t: "Breathe Out...", s: 0.4, d: 6000}, 
+            {t: "Rest...", s: 0.4, d: 2000}
+        ];
+        
+        let step = 0;
+        let cycle = 1;
+    
+        function next() {
+            // If we finished all steps in a cycle
+            if (step >= patterns.length) {
+                if (cycle < 3) { 
+                    cycle++; 
+                    step = 0; 
+                } else { 
+                    // Done with 3 rounds
+                    showScreen('after-screen'); 
+                    return; 
                 }
-                txt.innerHTML = `${patterns[step].t}<br><small style="font-size:14px; opacity:0.6">Round ${cycle}/2</small>`;
-                circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
-                circle.style.transform = `scale(${patterns[step].s})`;
-                setTimeout(() => { step++; next(); }, patterns[step].d);
             }
-            next();
+    
+            // Update Text
+            txt.innerHTML = `${patterns[step].t}<br><small style="font-size:16px; opacity:0.6">Round ${cycle} of 3</small>`;
+            
+            // Execute Movement (Scale is applied every time now)
+            circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
+            circle.style.transform = `scale(${patterns[step].s})`;
+    
+            // Wait for the duration of this step, then move to the next step
+            setTimeout(() => { 
+                step++; 
+                next(); 
+            }, patterns[step].d);
         }
-
+    
+        // Start the first step after a tiny delay
+        setTimeout(next, 500);
+    }
         function handleLogic() {
             const beforeMood = document.getElementById('before-custom').value || "Okay";
             const afterMood = document.getElementById('after-custom').value || "Better";
