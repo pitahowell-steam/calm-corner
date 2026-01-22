@@ -216,43 +216,54 @@
         }
 
     function startBreath() {
-        showScreen('breath-screen');
-        const circle = document.getElementById('breath-circle');
-        const target = document.getElementById('target-circle');
-        const txt = document.getElementById('breath-text');
-        
-        // 1. SET INITIAL STATE (Add/Update these lines)
-        circle.style.transition = "none"; // Turn off animation for the reset
-        circle.style.transform = "scale(0.4)"; // Start it small (matching your 'Rest' size)
-        circle.style.backgroundColor = selectedTheme.color;
-        target.style.borderColor = selectedTheme.color;
+    showScreen('breath-screen');
+    const circle = document.getElementById('breath-circle');
+    const target = document.getElementById('target-circle');
+    const txt = document.getElementById('breath-text');
     
-        const patterns = [
-            {t: "In...", s: 2.6, d: 4000}, 
-            {t: "Hold", s: 2.6, d: 2000}, 
-            {t: "Out...", s: 0.4, d: 6000}, 
-            {t: "Rest", s: 0.4, d: 2000}
-        ];
-        let step = 0, cycle = 1;
+    // 1. SAFETY RESET: Make it small instantly before starting
+    circle.style.transition = "none"; 
+    circle.style.transform = "scale(0.4)"; 
+    circle.style.backgroundColor = selectedTheme.color;
+    target.style.borderColor = selectedTheme.color;
+
+    const patterns = [
+        {t: "In...", s: 2.6, d: 4000}, 
+        {t: "Hold", s: 2.6, d: 2000}, 
+        {t: "Out...", s: 0.4, d: 6000}, 
+        {t: "Rest", s: 0.4, d: 2000}
+    ];
     
-        function next() {
-            if (step >= patterns.length) {
-                if (cycle < 3) { cycle++; step = 0; } 
-                else { showScreen('after-screen'); return; }
+    let step = 0;
+    let cycle = 1;
+
+    function next() {
+        if (step >= patterns.length) {
+            if (cycle < 3) { 
+                cycle++; 
+                step = 0; 
+            } else { 
+                showScreen('after-screen'); 
+                return; 
             }
-            txt.innerHTML = `${patterns[step].t}<br><small style="font-size:14px; opacity:0.6">Round ${cycle}/3</small>`;
-            
-            // 2. RE-ENABLE TRANSITION (This makes it grow smoothly)
-            circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
-            circle.style.transform = `scale(${patterns[step].s})`;
-            
-            setTimeout(() => { step++; next(); }, patterns[step].d);
         }
+
+        // Update Text
+        txt.innerHTML = `${patterns[step].t}<br><small style="font-size:14px; opacity:0.6">Round ${cycle}/3</small>`;
         
-        // 3. START (Small delay so the browser registers the small scale first)
-        setTimeout(next, 100);
+        // 2. APPLY ANIMATION: Move to the next size
+        circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
+        circle.style.transform = `scale(${patterns[step].s})`;
+
+        setTimeout(() => { 
+            step++; 
+            next(); 
+        }, patterns[step].d);
     }
 
+    // 3. THE KICKSTART: Wait 50ms to let the "small" scale settle, then start
+    setTimeout(next, 50);
+}
         function handleLogic() {
             const beforeMood = document.getElementById('before-custom').value || "Okay";
             const afterMood = document.getElementById('after-custom').value || "Better";
