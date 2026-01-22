@@ -8,22 +8,31 @@
         :root { --soft-pink: #FFB7B2; --soft-blue: #B2CEFE; --night-blue: #0A192F; --text-dark: #444; --glass: rgba(255, 255, 255, 0.96); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, sans-serif; overflow: hidden; background: #FDFCF0; color: var(--text-dark); }
+        
         .bg-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-size: cover; background-position: center; transition: all 1.2s ease; }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.8; animation: twinkle 2s infinite alternate; z-index: 2; }
         @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
+        
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; z-index: 10; padding: 20px; background: transparent; }
         .active { display: flex; }
+        
         .glass-card { background: var(--glass); padding: 30px; border-radius: 35px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.07); border: 1px solid rgba(255,255,255,0.3); }
-        .scene-card { background: white; width: 90%; max-width: 360px; padding: 20px; border-radius: 25px; margin-bottom: 12px; border: 3px solid #F0F0F0; display: flex; align-items: center; cursor: pointer; transition: 0.2s; font-weight: bold; justify-content: center; }
-        .pill-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 15px 0; }
-        .pill { background: #F5F5F5; padding: 12px 20px; border-radius: 25px; font-weight: 600; color: #777; cursor: pointer; border: 2px solid transparent; }
-        input, textarea { width: 100%; padding: 15px; border: 2px solid #EEE; border-radius: 18px; font-size: 16px; margin: 10px 0; outline: none; background: #FAFAFA; }
-        .main-btn { color: white; padding: 16px 45px; border-radius: 35px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        #breath-screen { background: rgba(0,0,0,0) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100; }
-        #breath-text { color: white; position: relative; z-index: 200; margin-bottom: 70px; font-size: 34px; font-weight: bold; text-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; }
-        #breath-wrap { position: relative; width: 320px; height: 320px; display: flex; align-items: center; justify-content: center; }
-        #target-circle { position: absolute; width: 260px; height: 260px; border-radius: 50%; border: 5px dashed rgba(255,255,255,0.3); z-index: 50; }
+        .scene-card { background: white; width: 100%; padding: 18px; border-radius: 20px; margin-bottom: 12px; border: 3px solid #F0F0F0; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-weight: bold; }
+        
+        .pill-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
+        .pill { background: #F5F5F5; padding: 10px 18px; border-radius: 20px; font-weight: 600; color: #777; cursor: pointer; border: 2px solid transparent; }
+        
+        input, textarea { width: 100%; padding: 15px; border: 2px solid #EEE; border-radius: 18px; font-size: 16px; margin: 10px 0; outline: none; background: #FAFAFA; font-family: inherit; }
+        .main-btn { color: white; padding: 16px 45px; border-radius: 35px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; }
+
+        #breath-screen { background: rgba(0,0,0,0.1) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100; }
+        #breath-text { color: white; font-size: 34px; font-weight: bold; text-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; margin-bottom: 40px; }
         #breath-circle { width: 100px; height: 100px; border-radius: 50%; z-index: 60; transform: scale(1); will-change: transform; }
+
+        .journal-list { width: 100%; max-width: 450px; overflow-y: auto; flex: 1; padding: 10px; }
+        .journal-card { background: white; padding: 20px; border-radius: 25px; margin-bottom: 15px; display: flex; gap: 15px; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #EEE; text-align: left;}
+        .mood-tag { font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; }
+        .reflection-box { background: #F9F9F9; padding: 10px; border-radius: 12px; font-size: 13px; margin-top: 8px; color: #555; border-left: 3px solid var(--soft-blue); }
     </style>
 </head>
 <body>
@@ -34,19 +43,21 @@
         <div class="glass-card">
             <h1>✨ Kawaii Calm</h1>
             <p style="color: #888;">Welcome to your safe space.</p>
-            <input type="text" id="name-input" placeholder="Enter Student Name..." autocomplete="off">
-            <button class="main-btn" id="login-trigger" style="background: #B2CEFE;">Enter Sanctuary</button>
+            <input type="text" id="name-input" placeholder="Enter Name..." autocomplete="off">
+            <button class="main-btn" id="login-trigger" style="background: var(--soft-blue);">Enter Sanctuary</button>
         </div>
     </div>
 
     <div id="home-screen" class="screen">
         <div class="glass-card">
-            <h2 style="margin:0;">Hello, <span id="user-display"></span>!</h2>
-            <p>🏆 Points: <span id="points-display">0</span></p>
-            <div class="scene-card" style="border-color: #FFB7B2;" onclick="setTheme('garden')">🌸 Garden</div>
-            <div class="scene-card" style="border-color: #B2CEFE;" onclick="setTheme('beach')">🏖️ Beach</div>
+            <h2 style="margin:0;">Hi, <span id="user-display"></span>!</h2>
+            <p style="font-weight: bold; color: #888;">🏆 Points: <span id="points-display">0</span></p>
+            <div class="scene-card" style="border-color: var(--soft-pink);" onclick="setTheme('garden')">🌸 Garden</div>
+            <div class="scene-card" style="border-color: var(--soft-blue);" onclick="setTheme('beach')">🏖️ Beach</div>
             <div class="scene-card" style="border-color: #4A90E2;" onclick="setTheme('night')">🌌 Night</div>
-            <button style="margin-top:15px; background:none; border:none; color:#AAA; cursor:pointer;" onclick="location.reload()">Switch User</button>
+            <button style="margin-top:15px; background:none; border:none; color: #4A90E2; font-weight:bold; cursor:pointer;" onclick="showJournal()">📖 View Journey</button>
+            <br>
+            <button style="margin-top:10px; background:none; border:none; color:#CCC; cursor:pointer; font-size:12px;" onclick="location.reload()">Switch User</button>
         </div>
     </div>
 
@@ -54,26 +65,22 @@
         <div class="glass-card">
             <h2>How do you feel?</h2>
             <div id="before-pills" class="pill-container"></div>
-            <input type="text" id="before-custom" placeholder="Or type it here...">
-            <button id="start-btn" class="main-btn" onclick="startBreath()">Start</button>
+            <input type="text" id="before-custom" placeholder="Or describe it here...">
+            <button id="start-btn" class="main-btn" onclick="startBreath()">Start Breathing</button>
         </div>
     </div>
 
     <div id="breath-screen" class="screen">
         <h1 id="breath-text">Ready?</h1>
-        <div id="breath-wrap">
-            <div id="target-circle"></div>
-            <div id="breath-circle"></div>
-        </div>
+        <div id="breath-circle"></div>
     </div>
 
     <div id="after-screen" class="screen">
         <div class="glass-card">
-            <h2>Breathe complete.</h2>
-            <p>How do you feel now?</p>
+            <h2>Feeling better?</h2>
             <div id="after-pills" class="pill-container"></div>
             <input type="text" id="after-custom" placeholder="I feel...">
-            <button id="finish-btn" class="main-btn" onclick="handleLogic()">Get Reward</button>
+            <button id="finish-btn" class="main-btn" onclick="handleLogic()">Complete Session</button>
         </div>
     </div>
 
@@ -81,58 +88,70 @@
         <div class="glass-card" id="reward-content"></div>
     </div>
 
+    <div id="journal-screen" class="screen" style="background: #F9FAFB;">
+        <h2 style="margin-bottom: 5px;">Your Journey Journal</h2>
+        <div id="journal-list" class="journal-list"></div>
+        <button class="main-btn" style="background: #444; width: 200px; margin: 20px;" onclick="showScreen('home-screen')">Back Home</button>
+    </div>
+
     <script>
-        // --- DATA ---
-        const SUGGESTED_BEFORE = ["Drained", "Tense", "Stressed", "Sad"];
-        const SUGGESTED_AFTER = ["Steady", "Relaxed", "Better", "Calm"];
+        const SUGGESTED_BEFORE = ["Overwhelmed", "Frustrated", "Tense", "Stressed", "Sad"];
+        const SUGGESTED_AFTER = ["Steady", "Relaxed", "Better", "Focused", "Stronger"];
+        const MISSIONS = [
+            { task: "Find 3 blue things in the room.", q: "What did you see?" },
+            { task: "Press your feet into the floor.", q: "How does it feel? (Hard, soft?)" },
+            { task: "Look for something shaped like a circle.", q: "What object did you find?" }
+        ];
         const REWARDS = [
-            { emoji: "🐢", name: "Patience Turtle" },
-            { emoji: "🐱", name: "Lucky Cat" },
-            { emoji: "☀️", name: "Golden Sun" }
+            { emoji: "🐢", name: "Patience Turtle", msg: "Slow and steady is a superpower." },
+            { emoji: "🐱", name: "Lucky Cat", msg: "A friend for your peaceful moments." },
+            { emoji: "☀️", name: "Golden Sun", msg: "Your energy lights up the room." },
+            { emoji: "☁️", name: "Happy Cloud", msg: "Bad feelings pass just like clouds." }
         ];
 
         let currentUser = "";
+        let inventory = [];
         let totalSessions = 0;
         let selectedTheme = { color: '#B2CEFE' };
 
-        // --- CORE NAVIGATION ---
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'flex';
-        }
-
-        // --- LOGIN LOGIC ---
+        // LOGIN ENGINE
         const loginBtn = document.getElementById('login-trigger');
         const nameInput = document.getElementById('name-input');
 
         function performLogin() {
-            const name = nameInput.value.trim();
-            if(!name) {
-                alert("Please enter a name!");
-                return;
-            }
+            const name = nameInput.value.trim().toLowerCase();
+            if(!name) return;
             currentUser = name;
-            document.getElementById('user-display').innerText = name;
+            const saved = localStorage.getItem('@kawaii_' + currentUser);
+            const data = saved ? JSON.parse(saved) : { inventory: [], total: 0 };
+            inventory = data.inventory || [];
+            totalSessions = data.total || 0;
+            document.getElementById('user-display').innerText = currentUser;
+            document.getElementById('points-display').innerText = totalSessions;
             showScreen('home-screen');
         }
 
         loginBtn.onclick = performLogin;
         nameInput.onkeypress = (e) => { if(e.key === 'Enter') performLogin(); };
 
-        // --- THEME & PILLS ---
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
         function setTheme(theme) {
             const bg = document.getElementById('bg-layer');
             bg.innerHTML = '';
             if(theme === 'garden') {
                 selectedTheme.color = '#FFB7B2';
-                bg.style.background = "#FDFCF0 url('https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80&w=500') center/cover";
+                bg.style.background = "url('https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80&w=500') center/cover";
             } else if(theme === 'beach') {
                 selectedTheme.color = '#B2CEFE';
-                bg.style.background = "#E0F7FA url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=500') center/cover";
+                bg.style.background = "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=500') center/cover";
             } else {
                 selectedTheme.color = '#4A90E2';
                 bg.style.background = "#0A192F";
-                for(let i=0; i<30; i++) {
+                for(let i=0; i<35; i++) {
                     let s = document.createElement('div'); s.className = 'star';
                     s.style.width = s.style.height = Math.random()*3+'px';
                     s.style.top = Math.random()*100+'%'; s.style.left = Math.random()*100+'%';
@@ -151,34 +170,25 @@
         }
 
         function selPill(el, type) {
-            el.parentElement.querySelectorAll('.pill').forEach(p => p.style.borderColor = 'transparent');
-            el.style.borderColor = selectedTheme.color;
+            el.parentElement.querySelectorAll('.pill').forEach(p => { p.style.background = '#F5F5F5'; p.style.borderColor = 'transparent'; });
+            el.style.background = 'white'; el.style.borderColor = selectedTheme.color;
             document.getElementById(type + '-custom').value = el.innerText;
         }
 
-        // --- BREATHING ---
         function startBreath() {
             showScreen('breath-screen');
             const circle = document.getElementById('breath-circle');
             const txt = document.getElementById('breath-text');
             circle.style.backgroundColor = selectedTheme.color;
-            
-            const patterns = [
-                {t: "Breathe In...", s: 2.6, d: 4000},
-                {t: "Hold...", s: 2.6, d: 2000},
-                {t: "Breathe Out...", s: 0.4, d: 6000},
-                {t: "Rest...", s: 0.4, d: 2000}
-            ];
-
-            let step = 0;
-            let cycle = 1;
+            const patterns = [{t: "In...", s: 2.6, d: 4000}, {t: "Hold", s: 2.6, d: 2000}, {t: "Out...", s: 0.4, d: 6000}, {t: "Rest", s: 0.4, d: 2000}];
+            let step = 0, cycle = 1;
 
             function next() {
                 if (step >= patterns.length) {
                     if (cycle < 2) { cycle++; step = 0; } 
                     else { showScreen('after-screen'); return; }
                 }
-                txt.innerHTML = `${patterns[step].t}<br><small>Round ${cycle} of 2</small>`;
+                txt.innerHTML = `${patterns[step].t}<br><small style="font-size:14px; opacity:0.6">Round ${cycle}/2</small>`;
                 circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
                 circle.style.transform = `scale(${patterns[step].s})`;
                 setTimeout(() => { step++; next(); }, patterns[step].d);
@@ -186,18 +196,64 @@
             next();
         }
 
-        // --- REWARDS ---
         function handleLogic() {
-            totalSessions++;
-            document.getElementById('points-display').innerText = totalSessions;
-            const r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
+            const beforeMood = document.getElementById('before-custom').value || "Okay";
+            const afterMood = document.getElementById('after-custom').value || "Better";
             const content = document.getElementById('reward-content');
-            content.innerHTML = `
-                <div style="font-size:70px;">${r.emoji}</div>
-                <h2>You found a ${r.name}!</h2>
-                <button class="main-btn" style="background:#444;" onclick="showScreen('home-screen')">Back Home</button>
-            `;
+            
+            const isMission = Math.random() > 0.5;
+            totalSessions++;
+
+            if(isMission) {
+                const m = MISSIONS[Math.floor(Math.random()*MISSIONS.length)];
+                content.innerHTML = `
+                    <p style="color:#4CAF50; font-weight:bold;">🧘 GROUNDING MISSION</p>
+                    <h2>${m.task}</h2><p>${m.q}</p>
+                    <textarea id="mission-refl" placeholder="Type what you found..."></textarea>
+                    <button class="main-btn" style="background:#4CAF50" onclick="saveMission('${m.task}', '${beforeMood}', '${afterMood}')">Save Mission</button>
+                `;
+            } else {
+                const r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
+                inventory.unshift({ emoji: r.emoji, name: r.name, msg: r.msg, before: beforeMood, after: afterMood, date: new Date().toLocaleDateString() });
+                content.innerHTML = `
+                    <div style="font-size:80px;">${r.emoji}</div>
+                    <h2>${r.name}</h2><p>"${r.msg}"</p>
+                    <button class="main-btn" style="background:${selectedTheme.color}" onclick="showScreen('home-screen')">Collect Reward</button>
+                `;
+            }
+            saveData();
             showScreen('reward-screen');
+        }
+
+        function saveMission(task, before, after) {
+            const refl = document.getElementById('mission-refl').value || "Completed";
+            inventory.unshift({ emoji: '🏅', name: 'Mission Medal', msg: task, reflection: refl, before: before, after: after, date: new Date().toLocaleDateString() });
+            saveData();
+            showScreen('home-screen');
+        }
+
+        function saveData() {
+            localStorage.setItem('@kawaii_' + currentUser, JSON.stringify({inventory, total: totalSessions}));
+            document.getElementById('points-display').innerText = totalSessions;
+        }
+
+        function showJournal() {
+            const list = document.getElementById('journal-list');
+            list.innerHTML = inventory.length === 0 ? "<p>No entries yet!</p>" : inventory.map(i => `
+                <div class="journal-card">
+                    <div style="font-size:35px;">${i.emoji}</div>
+                    <div style="flex:1">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <span class="mood-tag">${i.date}</span>
+                            <span style="font-size:11px; color:${selectedTheme.color}; font-weight:bold;">${i.before} ➔ ${i.after}</span>
+                        </div>
+                        <div style="font-weight:bold;">${i.name}</div>
+                        <div style="font-size:13px; color:#666;">${i.msg}</div>
+                        ${i.reflection ? `<div class="reflection-box">" ${i.reflection} "</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            showScreen('journal-screen');
         }
     </script>
 </body>
