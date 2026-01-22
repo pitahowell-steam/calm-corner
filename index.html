@@ -35,7 +35,13 @@
         .main-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         /* --- FIXED BREATHING ENGINE --- */
-        #breath-screen { background: rgba(10, 25, 47, 0.95) !important; z-index: 100; }
+          #breath-screen { 
+            /* Remove the solid background, use a soft tint + blur instead */
+            background: rgba(255, 255, 255, 0.1) !important; 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100; 
+        }
         #breath-text { color: white; position: relative; z-index: 200; margin-bottom: 70px; font-size: 34px; font-weight: bold; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         
         #breath-wrap { position: relative; width: 320px; height: 320px; display: flex; align-items: center; justify-content: center; }
