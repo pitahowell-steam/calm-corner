@@ -27,10 +27,10 @@
         input, textarea { width: 100%; padding: 15px; border: 2px solid #EEE; border-radius: 18px; font-size: 16px; margin: 10px 0; outline: none; background: #FAFAFA; font-family: inherit; }
         .main-btn { color: white; padding: 16px 45px; border-radius: 35px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; }
 
-       #breath-screen { 
-            background: rgba(0,0,0,0.4) !important; 
-            backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px); 
+        #breath-screen { 
+            background: rgba(0, 0, 0, 0.15) !important; /* Lowered from 0.4 to 0.15 */
+            backdrop-filter: blur(8px); /* Lowered from 15px to 8px so the scene is visible */
+            -webkit-backdrop-filter: blur(8px); 
             z-index: 100; 
         }
         /* This new container keeps the circle centered */
@@ -48,10 +48,12 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            border: 3px dashed rgba(255, 255, 255, 0.2);
+            /* Solid line instead of dashed */
+            border: 2px solid rgba(255, 255, 255, 0.3); 
             background: rgba(255, 255, 255, 0.05);
-            transform: scale(2.6); /* This matches your "Breathe In" size */
+            transform: scale(2.6); 
             z-index: 50;
+            transition: border-color 0.5s ease; /* Smooth color transition */
         }
         #breath-text { color: white; font-size: 34px; font-weight: bold; text-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; margin-bottom: 40px; }
         #breath-circle { 
@@ -107,7 +109,7 @@
 
     <div id="breath-screen" class="screen">
         <h1 id="breath-text">Ready?</h1>
-        <div id="breath-container">
+        <div id="breath-container" style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
             <div id="target-circle"></div>
             <div id="breath-circle"></div>
         </div>
@@ -214,6 +216,14 @@
         }
 
         function startBreath() {
+            showScreen('breath-screen');
+            const circle = document.getElementById('breath-circle');
+            const target = document.getElementById('target-circle'); // Add this line
+            const txt = document.getElementById('breath-text');
+            
+            circle.style.backgroundColor = selectedTheme.color;
+            target.style.borderColor = selectedTheme.color; // This makes the target match!
+            target.style.opacity = "0.4"; // Makes the target soft and calm
             showScreen('breath-screen');
             const circle = document.getElementById('breath-circle');
             const txt = document.getElementById('breath-text');
