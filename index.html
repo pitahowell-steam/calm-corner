@@ -221,29 +221,54 @@
         }
 
         /* --- THE COMPLETED BREATHING ENGINE --- */
-        function startBreath() {
-            showScreen('breath-screen');
-            const circle = document.getElementById('breath-circle');
-            const txt = document.getElementById('breath-text');
-            circle.style.backgroundColor = selectedTheme.color;
-            
-            const patterns = [
-                {t: "Breathe In...", s: 2.6, d: 4000},
-                {t: "Hold...", s: 2.6, d: 2000},
-                {t: "Breathe Out...", s: 1.0, d: 6000},
-                {t: "Rest...", s: 1.0, d: 2000}
-            ];
+function startBreath() {
+    showScreen('breath-screen');
+    const circle = document.getElementById('breath-circle');
+    const txt = document.getElementById('breath-text');
+    circle.style.backgroundColor = selectedTheme.color;
+    
+    // The specific timings for one "Round"
+    const patterns = [
+        {t: "Breathe In...", s: 2.6, d: 4000},
+        {t: "Hold...", s: 2.6, d: 2000},
+        {t: "Breathe Out...", s: 1.0, d: 6000},
+        {t: "Rest...", s: 1.0, d: 2000}
+    ];
 
-            let step = 0;
-            function next() {
-                if(step >= patterns.length) { showScreen('after-screen'); return; }
-                txt.innerText = patterns[step].t;
-                circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
-                circle.style.transform = `scale(${patterns[step].s})`;
-                setTimeout(() => { step++; next(); }, patterns[step].d);
+    let step = 0;
+    let cycleCount = 1;
+    const totalCycles = 3; // <--- You can change this number to 5 or 10 later!
+
+    function next() {
+        // If we finished all steps in a round...
+        if (step >= patterns.length) {
+            if (cycleCount < totalCycles) {
+                // ...Start a new round
+                cycleCount++;
+                step = 0; 
+            } else {
+                // ...Or finish if we hit 3 rounds
+                showScreen('after-screen'); 
+                return;
             }
-            setTimeout(next, 500);
         }
+
+        // Show "Breathe In (1 of 3)" etc.
+        txt.innerHTML = `${patterns[step].t} <br> <span style="font-size:18px; opacity:0.7;">Round ${cycleCount} of ${totalCycles}</span>`;
+        
+        // Execute the physical animation
+        circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
+        circle.style.transform = `scale(${patterns[step].s})`;
+
+        setTimeout(() => {
+            step++;
+            next();
+        }, patterns[step].d);
+    }
+
+    // Start the first cycle
+    setTimeout(next, 500);
+}
 
         /* --- REWARD, MISSION, & SAVE --- */
         function handleLogic() {
