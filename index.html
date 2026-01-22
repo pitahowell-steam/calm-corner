@@ -25,10 +25,30 @@
         input, textarea { width: 100%; padding: 15px; border: 2px solid #EEE; border-radius: 18px; font-size: 16px; margin: 10px 0; outline: none; background: #FAFAFA; font-family: inherit; }
         .main-btn { color: white; padding: 16px 45px; border-radius: 35px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; }
 
-        #breath-screen { background: rgba(0,0,0,0.1) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100; }
+       #breath-screen { 
+            background: rgba(0,0,0,0.4) !important; 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px); 
+            z-index: 100; 
+        }
+        /* This new container keeps the circle centered */
+    #breath-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
         #breath-text { color: white; font-size: 34px; font-weight: bold; text-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; margin-bottom: 40px; }
-        #breath-circle { width: 100px; height: 100px; border-radius: 50%; z-index: 60; transform: scale(1); will-change: transform; }
-
+        #breath-circle { 
+            width: 120px; 
+            height: 120px; 
+            border-radius: 50%; 
+            z-index: 60; 
+            transform: scale(1); 
+            will-change: transform;
+            box-shadow: 0 0 30px rgba(255,255,255,0.3);
+        }
         .journal-list { width: 100%; max-width: 450px; overflow-y: auto; flex: 1; padding: 10px; }
         .journal-card { background: white; padding: 20px; border-radius: 25px; margin-bottom: 15px; display: flex; gap: 15px; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #EEE; text-align: left;}
         .mood-tag { font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; }
@@ -72,7 +92,9 @@
 
     <div id="breath-screen" class="screen">
         <h1 id="breath-text">Ready?</h1>
-        <div id="breath-circle"></div>
+        <div id="breath-container">
+            <div id="breath-circle"></div>
+        </div>
     </div>
 
     <div id="after-screen" class="screen">
