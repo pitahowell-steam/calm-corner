@@ -19,7 +19,19 @@
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle 2s infinite alternate; }
         @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
 
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; z-index: 10; padding: 20px; }
+        .screen { 
+    display: none; 
+    height: 100vh; 
+    width: 100vw; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    position: absolute; 
+    z-index: 10; 
+    padding: 20px;
+    /* Ensure no background here so transparency works */
+    background: transparent; 
+}
         .active { display: flex; }
 
         /* --- UI COMPONENTS --- */
@@ -35,7 +47,18 @@
         .main-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         /* --- FIXED BREATHING ENGINE --- */
-        #breath-screen { background: rgba(10, 25, 47, 0.95) !important; z-index: 100; }
+          #breath-screen { 
+          #breath-screen { 
+            background: rgba(0, 0, 0, 0) !important; /* Forces total transparency */
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100;
+            }
+
+/* Ensure the background layer stays visible */
+.bg-layer { 
+    z-index: 1; 
+}
         #breath-text { color: white; position: relative; z-index: 200; margin-bottom: 70px; font-size: 34px; font-weight: bold; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         
         #breath-wrap { position: relative; width: 320px; height: 320px; display: flex; align-items: center; justify-content: center; }
