@@ -184,31 +184,56 @@
             document.getElementById(type + '-custom').value = el.innerText;
         }
 
-        function startBreath() {
-            showScreen('breath-screen');
-            const circle = document.getElementById('breath-circle');
-            const target = document.getElementById('target-circle');
-            const txt = document.getElementById('breath-text');
-            
-            circle.style.backgroundColor = selectedTheme.color;
-            target.style.borderColor = selectedTheme.color;
-
-            const patterns = [{t: "In...", s: 2.6, d: 4000}, {t: "Hold", s: 2.6, d: 2000}, {t: "Out...", s: 0.4, d: 6000}, {t: "Rest", s: 0.4, d: 2000}];
-            let step = 0, cycle = 1;
-
-            function next() {
-                if (step >= patterns.length) {
-                    if (cycle < 3) { cycle++; step = 0; } 
-                    else { showScreen('after-screen'); return; }
+       function startBreath() {
+        showScreen('breath-screen');
+        const circle = document.getElementById('breath-circle');
+        const target = document.getElementById('target-circle');
+        const txt = document.getElementById('breath-text');
+        
+        // 1. THE RESET: Force the circle to be small instantly
+        circle.style.transition = "none"; 
+        circle.style.transform = "scale(0.4)"; 
+        
+        // Apply theme colors
+        circle.style.backgroundColor = selectedTheme.color;
+        target.style.borderColor = selectedTheme.color;
+        target.style.opacity = "0.4";
+    
+        const patterns = [
+            {t: "In...", s: 2.6, d: 4000}, 
+            {t: "Hold", s: 2.6, d: 2000}, 
+            {t: "Out...", s: 0.4, d: 6000}, 
+            {t: "Rest", s: 0.4, d: 2000}
+        ];
+        let step = 0;
+        let cycle = 1;
+    
+        function next() {
+            if (step >= patterns.length) {
+                if (cycle < 3) { 
+                    cycle++; 
+                    step = 0; 
+                } else { 
+                    showScreen('after-screen'); 
+                    return; 
                 }
-                txt.innerHTML = `${patterns[step].t}<br><small style="font-size:14px; opacity:0.6">Round ${cycle}/3</small>`;
-                circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
-                circle.style.transform = `scale(${patterns[step].s})`;
-                setTimeout(() => { step++; next(); }, patterns[step].d);
             }
-            next();
-        }
 
+        txt.innerHTML = `${patterns[step].t}<br><small style="font-size:14px; opacity:0.6">Round ${cycle}/3</small>`;
+        
+        // 2. THE ANIMATION: Re-enable transitions and move to next size
+        circle.style.transition = `transform ${patterns[step].d}ms ease-in-out`;
+        circle.style.transform = `scale(${patterns[step].s})`;
+
+        setTimeout(() => { 
+            step++; 
+            next(); 
+        }, patterns[step].d);
+    }
+
+    // 3. THE KICKSTART: This 100ms delay prevents the "Starting Large" bug
+    setTimeout(next, 100);
+}
         function handleLogic() {
             const beforeMood = document.getElementById('before-custom').value || "Okay";
             const afterMood = document.getElementById('after-custom').value || "Better";
