@@ -264,11 +264,18 @@
 
         function saveMission(task, before, after) {
             const refl = document.getElementById('mission-refl').value || "Completed";
-            inventory.unshift({ emoji: '🏅', name: 'Mission Medal', msg: task, reflection: refl, before: before, after: after, date: new Date().toLocaleDateString() });
+            inventory.unshift({ 
+                emoji: '🏅', 
+                name: 'Mission Medal', 
+                msg: task,          // This is the mission question
+                reflection: refl,   // This is the student's typed answer
+                before: before, 
+                after: after, 
+                date: new Date().toLocaleDateString() 
+            });
             saveData();
             showScreen('home-screen');
         }
-
         function saveData() {
             localStorage.setItem('@kawaii_' + currentUser, JSON.stringify({inventory, total: totalSessions}));
             const d = document.getElementById('points-display');
@@ -277,20 +284,32 @@
 
         function showJournal() {
             const list = document.getElementById('journal-list');
-            list.innerHTML = inventory.length === 0 ? "<p>No entries yet!</p>" : inventory.map(i => `
-                <div class="journal-card">
-                    <div style="font-size:35px;">${i.emoji}</div>
-                    <div style="flex:1">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                            <span class="mood-tag">${i.date}</span>
-                            <span style="font-size:11px; color:${selectedTheme.color}; font-weight:bold;">${i.before} ➔ ${i.after}</span>
+            
+            list.innerHTML = inventory.length === 0 ? "<p>No entries yet!</p>" : inventory.map(i => {
+                // Fallback logic: Ensure we find the text regardless of entry type
+                const entryText = i.msg || i.reflection || "No details recorded";
+                const entryTitle = i.name || (i.emoji === '🏅' ? "Mission Medal" : "Entry");
+        
+                return `
+                    <div class="journal-card">
+                        <div style="font-size:35px;">${i.emoji}</div>
+                        <div style="flex:1">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <span class="mood-tag">${i.date}</span>
+                                <span style="font-size:11px; color:${selectedTheme.color}; font-weight:bold;">
+                                    ${i.before || '...'} ➔ ${i.after || '...'}
+                                </span>
+                            </div>
+                            <div style="font-weight:bold;">${entryTitle}</div>
+                            <div style="font-size:13px; color:#666;">${entryText}</div>
+                            
+                            ${i.reflection && i.emoji === '🏅' ? 
+                                `<div class="reflection-box">" ${i.reflection} "</div>` : ''}
                         </div>
-                        <div style="font-weight:bold;">${i.name}</div>
-                        <div style="font-size:13px; color:#666;">${i.msg}</div>
-                        ${i.reflection ? `<div class="reflection-box">" ${i.reflection} "</div>` : ''}
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+            
             showScreen('journal-screen');
         }
     </script>
