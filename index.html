@@ -296,38 +296,38 @@
         }
 
         function showJournal() {
-            const list = document.getElementById('journal-list');
-            
-            list.innerHTML = inventory.length === 0 ? "<p>No entries yet!</p>" : inventory.map(i => {
-                // Fallback logic: Ensure we find the text regardless of entry type
-                const entryText = i.msg || i.reflection || "No details recorded";
-                const entryTitle = i.name || (i.emoji === '🏅' ? "Mission Medal" : "Entry");
-        
-                return `
-                    <div class="journal-card">
-                        <div style="font-size:35px;">${i.emoji}</div>
-                        <div style="flex:1">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                                <span class="mood-tag">${i.date}</span>
-                                <span style="font-size:11px; color:${selectedTheme.color}; font-weight:bold;">
-                                    ${i.before || '...'} ➔ ${i.after || '...'}
-                                </span>
-                            </div>
-                            <div style="font-weight:bold;">${entryTitle}</div>
-                            <div style="font-size:13px; color:#666; margin-bottom:4px;">${entryText}</div>
-                            
-                           ${i.reflection ? `
-                            <div class="reflection-box">
-                                <strong>My Response:</strong><br>
-                                "${i.reflection}"
-                            </div>` : ''}
-                        </div>
+    const list = document.getElementById('journal-list');
+    
+    list.innerHTML = inventory.length === 0 ? "<p>No entries yet!</p>" : inventory.map(i => {
+        const entryText = i.msg || i.reflection || "No details recorded";
+        const entryTitle = i.name || (i.emoji === '🏅' ? "Mission Medal" : "Entry");
+
+        return `
+            <div class="journal-card" style="display: flex; gap: 15px; align-items: flex-start;">
+                <div style="font-size:35px; min-width: 45px; text-align: center;">${i.emoji}</div>
+                
+                <div style="flex: 1; min-width: 0;"> 
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <span class="mood-tag">${i.date}</span>
+                        <span style="font-size:11px; color:${selectedTheme.color}; font-weight:bold;">
+                            ${i.before || '...'} ➔ ${i.after || '...'}
+                        </span>
                     </div>
-                `;
-            }).join('');
-            
-            showScreen('journal-screen');
-        }
+                    <div style="font-weight:bold; font-size: 15px;">${entryTitle}</div>
+                    <div style="font-size: 13px; color:#666; line-height: 1.4;">${entryText}</div>
+                    
+                    ${i.reflection ? `
+                        <div class="reflection-box">
+                            <span style="font-weight:bold; color:#888; font-size:10px; text-transform:uppercase;">My Response:</span><br>
+                            "${i.reflection}"
+                        </div>` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    showScreen('journal-screen');
+    }
     </script>
 </body>
 </html>
