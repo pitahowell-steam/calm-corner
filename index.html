@@ -71,20 +71,29 @@
                     inset 10px 10px 20px rgba(255,255,255,0.1),
                     0 10px 20px rgba(0,0,0,0.05);
     }
-    /* The Glossy Highlight - Attached to a pseudo-element */
-    .bubble::before {
-        content: '';
-        position: absolute;
-        top: 15%;
-        left: 20%;
-        width: 20%;
-        height: 20%;
-        background: white;
-        border-radius: 50%;
-        filter: blur(1px);
-        opacity: 0.8;
-        z-index: 2;
-    }
+ /* The Glossy Highlight - Elongated & Realistic */
+.bubble::before {
+    content: '';
+    position: absolute;
+    top: 12%;      /* Distance from the top */
+    left: 18%;     /* Distance from the left */
+    width: 35%;    /* ELONGATE: Increase width for a long reflection */
+    height: 15%;   /* ELONGATE: Decrease height for a slim reflection */
+    background: rgba(255, 255, 255, 0.7);
+    
+    /* Rotate it slightly to follow the curve of the bubble */
+    transform: rotate(-25deg); 
+    
+    border-radius: 50%; /* Keeps the ends rounded and soft */
+    filter: blur(1.5px); /* Makes it look like light, not a hard sticker */
+    z-index: 2;
+    
+    /* CUSTOMIZE NOTE: 
+       To make the reflection longer: increase width (e.g., 45%)
+       To make it thinner: decrease height (e.g., 10%)
+       To change the angle: adjust rotate (e.g., -10deg or -45deg)
+    */
+}
 
    /* WHEN POPPED: Remove the background, the border, AND the highlight (::before) */
     .bubble.popped {
