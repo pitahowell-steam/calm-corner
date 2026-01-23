@@ -39,7 +39,18 @@
         .journal-list { width: 100%; max-width: 450px; overflow-y: auto; flex: 1; padding: 10px; }
         .journal-card { background: white; padding: 20px; border-radius: 25px; margin-bottom: 15px; display: flex; gap: 15px; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #EEE; text-align: left;}
         .mood-tag { font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; }
-        .reflection-box { background: #F9F9F9; padding: 10px; border-radius: 12px; font-size: 13px; margin-top: 8px; color: #555; border-left: 3px solid var(--soft-blue); }
+       .reflection-box { 
+            background: rgba(0,0,0,0.03); /* Soft subtle gray */
+            padding: 12px; 
+            border-radius: 15px; 
+            font-size: 13px; 
+            margin-top: 10px; 
+            color: #555; 
+            border: 1px solid #EEE; /* Clean border instead of the thick blue one */
+            font-style: italic;
+            width: 100%; /* Ensures it fills the card width */
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -301,10 +312,13 @@
                                 </span>
                             </div>
                             <div style="font-weight:bold;">${entryTitle}</div>
-                            <div style="font-size:13px; color:#666;">${entryText}</div>
+                            <div style="font-size:13px; color:#666; margin-bottom:4px;">${entryText}</div>
                             
-                            ${i.reflection && i.emoji === '🏅' ? 
-                                `<div class="reflection-box">" ${i.reflection} "</div>` : ''}
+                           ${i.reflection ? `
+                            <div class="reflection-box">
+                                <strong>My Response:</strong><br>
+                                "${i.reflection}"
+                            </div>` : ''}
                         </div>
                     </div>
                 `;
