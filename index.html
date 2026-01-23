@@ -53,6 +53,30 @@
             display: block;        /* Ensures it stays on its own line */
             clear: both;           /* Prevents floating elements from pushing it */
         }
+        .bubble {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05), inset 0 -5px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid #E0E0E0;
+        }
+
+        .bubble:active {
+            transform: scale(0.8); /* The "Popping" squish */
+        }
+        
+        .bubble.popped {
+            opacity: 0.3;
+            transform: scale(1.2);
+            filter: blur(1px);
+        }
     </style>
 </head>
 <body>
@@ -76,6 +100,7 @@
             <div class="scene-card" style="border-color: var(--soft-blue);" onclick="setTheme('beach')">🏖️ Beach</div>
             <div class="scene-card" style="border-color: #4A90E2;" onclick="setTheme('night')">🌌 Night</div>
             <button style="margin-top:15px; background:none; border:none; color: #4A90E2; font-weight:bold; cursor:pointer;" onclick="showJournal()">📖 View Journey</button>
+            <button style="margin-top:15px; background:none; border:none; color: #4CAF50; font-weight:bold; cursor:pointer;" onclick="showToolbox()">🧰 Open Toolbox</button>
             <br>
             <button style="margin-top:10px; background:none; border:none; color:#CCC; cursor:pointer; font-size:12px;" onclick="location.reload()">Switch User</button>
         </div>
@@ -110,7 +135,15 @@
     <div id="reward-screen" class="screen">
         <div class="glass-card" id="reward-content"></div>
     </div>
-
+    <div id="toolbox-screen" class="screen" style="background: #F0F4F8;">
+        <h2 style="margin-bottom: 5px;">My Wellness Toolbox</h2>
+        <div id="active-tool-text" style="height: 60px; padding: 10px; font-weight: bold; color: #555; text-align: center; font-size: 14px;">
+            Tap a bubble to see how it helps your body!
+        </div>
+        <div id="bubbles-container" class="pill-container" style="padding: 20px; flex: 1; align-content: flex-start;">
+            </div>
+        <button class="main-btn" style="background: #444; width: 200px; margin-bottom: 20px;" onclick="showScreen('home-screen')">Back Home</button>
+    </div>
     <div id="journal-screen" class="screen" style="background: #F9FAFB;">
         <h2 style="margin-bottom: 5px;">Journal</h2>
         <div id="journal-list" class="journal-list"></div>
@@ -327,6 +360,39 @@
     }).join('');
     
     showScreen('journal-screen');
+    }
+        function showToolbox() {
+    const container = document.getElementById('bubbles-container');
+    const display = document.getElementById('active-tool-text');
+    
+    // We only want to show unique tools the student has collected
+    const uniqueTools = Array.from(new Set(inventory.filter(i => i.emoji !== '🏅').map(i => i.emoji)))
+        .map(emoji => inventory.find(i => i.emoji === emoji));
+
+    if (uniqueTools.length === 0) {
+        container.innerHTML = "<p>Complete sessions to collect tools!</p>";
+    } else {
+        container.innerHTML = uniqueTools.map(tool => `
+            <div class="bubble" onclick="popBubble(this, '${tool.name}', '${tool.msg}')">
+                ${tool.emoji}
+            </div>
+        `).join('');
+    }
+    showScreen('toolbox-screen');
+}
+
+    function popBubble(el, name, msg) {
+        // 1. Reset all bubbles first
+        document.querySelectorAll('.bubble').forEach(b => b.classList.remove('popped'));
+        
+        // 2. "Pop" this bubble
+        el.classList.add('popped');
+        
+        // 3. Update the text at the top
+        const display = document.getElementById('active-tool-text');
+        display.innerHTML = `<span style="color:${selectedTheme.color}">${name}:</span> ${msg}`;
+        
+        // Optional: Add a tiny pop sound effect here if you have one!
     }
     </script>
 </body>
