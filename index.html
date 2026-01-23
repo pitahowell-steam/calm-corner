@@ -99,7 +99,7 @@
     </div>
 
     <div id="journal-screen" class="screen" style="background: #F9FAFB;">
-        <h2 style="margin-bottom: 5px;">Your Journey Journal</h2>
+        <h2 style="margin-bottom: 5px;">Journal</h2>
         <div id="journal-list" class="journal-list"></div>
         <button class="main-btn" style="background: #444; width: 200px; margin: 20px;" onclick="showScreen('home-screen')">Back Home</button>
     </div>
@@ -263,7 +263,7 @@
         }
 
         function saveMission(task, before, after) {
-            const refl = document.getElementById('mission-refl').value || "Completed";
+            const refl = document.getElementById('mission-refl').value || "No response recorded.";
             inventory.unshift({ 
                 emoji: '🏅', 
                 name: 'Mission Medal', 
