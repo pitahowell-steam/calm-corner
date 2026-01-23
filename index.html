@@ -248,6 +248,18 @@ div#toolbox-screen.screen.active {
             { emoji: "💧", name: "Cold Water", msg: "Splashing cold water on your face triggers the 'Mammalian Dive Reflex' to instantly slow your heart." },
             { emoji: "🦋", name: "Butterfly Hug", msg: "Tapping your shoulders rhythmically helps your brain process big, 'stuck' emotions." }
         ];
+        const AFFIRMATIONS = [
+            "I am proud of you for choosing to slow down and breathe.",
+            "You are learning exactly what your body needs to feel safe.",
+            "It takes strength to ground yourself when things feel heavy.",
+            "You deserve to feel protected and held in this moment.",
+            "I see you working hard to find your inner quiet.",
+            "You have the power to change how you feel, one breath at a time.",
+            "You are becoming so brave at listening to your body.",
+            "You are safe, you are capable, and you are doing a great job.",
+            "Giving yourself this time is a beautiful act of kindness.",
+            "Your peace is worth the effort you are putting in right now."
+        ];
 
         let currentUser = "";
         let inventory = [];
@@ -379,15 +391,40 @@ div#toolbox-screen.screen.active {
                     <textarea id="mission-refl" placeholder="Type what you found..."></textarea>
                     <button class="main-btn" style="background:#4CAF50" onclick="saveMission('${m.task}', '${beforeMood}', '${afterMood}')">Save Mission</button>
                 `;
-            } else {
-                const r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
-                inventory.unshift({ emoji: r.emoji, name: r.name, msg: r.msg, before: beforeMood, after: afterMood, date: new Date().toLocaleDateString() });
-                content.innerHTML = `
-                    <div style="font-size:80px;">${r.emoji}</div>
-                    <h2>${r.name}</h2><p>"${r.msg}"</p>
-                    <button class="main-btn" style="background:${selectedTheme.color}" onclick="showScreen('home-screen')">Collect Reward</button>
-                `;
-            }
+               } else {
+        // 1. Pick a random reward and a random affirmation independently
+        const r = REWARDS[Math.floor(Math.random() * REWARDS.length)];
+        const randomAffirmation = AFFIRMATIONS[Math.floor(Math.random() * AFFIRMATIONS.length)];
+    
+        // 2. Save to inventory (storing both the tool info and the specific affirmation they got)
+        inventory.unshift({ 
+            emoji: r.emoji, 
+            name: r.name, 
+            msg: r.msg, 
+            affirmation: randomAffirmation, // Tied together just for this entry
+            before: beforeMood, 
+            after: afterMood, 
+            date: new Date().toLocaleDateString() 
+        });
+    
+        // 3. Display them on the reward screen
+        content.innerHTML = `
+            <div style="font-size:80px; margin-bottom:15px;">${r.emoji}</div>
+            <h2 style="color:#2D3748; margin-bottom:10px;">${r.name}</h2>
+            
+            <div style="background: rgba(255,255,255,0.5); padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 1px dashed ${selectedTheme.color};">
+                <p style="font-style:italic; color:#2C3E50; font-size:17px; margin:0; font-weight:600;">
+                    "${randomAffirmation}"
+                </p> 
+            </div>
+    
+            <p style="font-size:13px; color:#666; line-height:1.4;">
+                <strong>Tool Tip:</strong> ${r.msg}
+            </p>
+    
+            <button class="main-btn" style="background:${selectedTheme.color}" onclick="showScreen('home-screen')">Collect Reward</button>
+        `;
+    }
             saveData();
             showScreen('reward-screen');
         }
@@ -432,7 +469,14 @@ div#toolbox-screen.screen.active {
                     </div>
                     <div style="font-weight:bold; font-size: 15px;">${entryTitle}</div>
                     <div style="font-size: 13px; color:#666; line-height: 1.4;">${entryText}</div>
-                    
+                    // ... inside the return template of showJournal map ...
+<div style="font-weight:bold; font-size: 15px;">${entryTitle}</div>
+<div style="font-size: 13px; color:#666; line-height: 1.4;">${entryText}</div>
+
+${i.affirmation ? `
+    <div style="color: #4A90E2; font-size: 12px; font-style: italic; margin-top: 5px; border-left: 2px solid #B2CEFE; padding-left: 8px;">
+        "${i.affirmation}"
+    </div>` : ''}
                     ${i.reflection ? `
                         <div class="reflection-box">
                             <span style="font-weight:bold; color:#888; font-size:10px; text-transform:uppercase;">My Response:</span><br>
