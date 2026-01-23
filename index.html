@@ -54,30 +54,61 @@
             clear: both;           /* Prevents floating elements from pushing it */
         }
 .bubble {
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.4); /* Transparent */
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    width: 85px;
+    height: 85px;
+    background: rgba(255, 255, 255, 0.2); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 38px;
     cursor: pointer;
     position: relative;
-    border: 2px solid rgba(255, 255, 255, 0.6);
-    box-shadow: inset -5px -5px 15px rgba(255, 255, 255, 0.5), 
-                inset 5px 5px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    /* High-gloss shine effect */
+    box-shadow: 
+        inset 10px 10px 20px rgba(255, 255, 255, 0.3),
+        inset -5px -5px 15px rgba(0, 0, 0, 0.05),
+        0 10px 20px rgba(0, 0, 0, 0.05);
 }
+        /* The "Glossy Highlight" dot */
+    .bubble::before {
+        content: '';
+        position: absolute;
+        top: 15%;
+        left: 20%;
+        width: 20%;
+        height: 20%;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        filter: blur(1px);
+    }
 
-/* The "Popping" Animation */
-.bubble.popped {
-    animation: burst 0.4s forwards;
-}
+    /* The Pop & Kawaii Jump Animation */
+    .bubble.popped {
+        background: transparent;
+        border-color: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+        
+    /* The Emoji Jump - Soft and Tranquil */
+    .bubble.popped span {
+        animation: kawaiiJump 0.6s ease-out forwards;
+        display: inline-block;
+    }
 
-@keyframes burst {
+     @keyframes kawaiiJump {
+    0% { transform: translateY(0) scale(1); }
+    30% { transform: translateY(-25px) scale(1.1); } /* The "Up" part */
+    50% { transform: translateY(0) scale(0.95); }   /* The "Land" part */
+    70% { transform: translateY(-8px) scale(1.02); } /* Tiny bounce */
+    100% { transform: translateY(0) scale(1); }
+    }
+    @keyframes burst {
     0% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.4); opacity: 0.5; border-width: 1px; }
     100% { transform: scale(1.6); opacity: 0; visibility: hidden; }
@@ -87,6 +118,24 @@
 .bubble span {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     opacity: 1 !important;
+}
+    /* The actual "Burst" effect for the soapy shell only */
+.bubble.popped::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    border: 2px solid white;
+    animation: burstShell 0.3s ease-out forwards;
+}
+    @keyframes burstShell {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.8); opacity: 0; }
+}
+        
+/* Darker but serene background for the Toolbox Screen */
+#toolbox-screen {
+    background: #E2E8F0 !important; /* Soft Slate Gray-Blue */
 }
     </style>
 </head>
@@ -407,20 +456,20 @@
         showScreen('toolbox-screen');
     }
 
-    function popBubble(el, name, msg) {
-        // 1. Bring back any previously popped bubbles instantly
+  function popBubble(el, name, msg) {
+        // 1. Reset all bubbles to their full "soapy" state first
         document.querySelectorAll('.bubble').forEach(b => {
             b.classList.remove('popped');
         });
         
-        // 2. Burst the current bubble
+        // 2. Trigger the burst & jump on the clicked one
         el.classList.add('popped');
         
-        // 3. Update text with a stronger color (Deep Charcoal/Navy instead of baby blue)
+        // 3. Update the text with the deep Charcoal color for clarity
         const display = document.getElementById('active-tool-text');
         display.innerHTML = `
-            <div style="color: #2C3E50; font-weight: 800; font-size: 18px; margin-bottom: 4px;">${name}</div>
-            <div style="color: #555; font-weight: 400; line-height: 1.3;">${msg}</div>
+            <div style="color: #2D3748; font-weight: 800; font-size: 20px; margin-bottom: 5px;">${name}</div>
+            <div style="color: #4A5568; font-weight: 500; line-height: 1.4; max-width: 320px; margin: 0 auto;">${msg}</div>
         `;
     }
     </script>
