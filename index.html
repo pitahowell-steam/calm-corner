@@ -227,8 +227,18 @@ div#toolbox-screen.screen.active {
         const MISSIONS = [
             { task: "Find 3 blue things in the room.", q: "What did you see?" },
             { task: "Press your feet into the floor.", q: "How does it feel? (Hard, soft?)" },
-            { task: "Look for something shaped like a circle.", q: "What object did you find?" }
+            { task: "Look for something shaped like a circle.", q: "What object did you find?" },
+            { task: "Find 5 things in this room that are the same color as your shirt. Look slowly.", q: "What colors did you find, and did focusing on them help you feel more 'here'?" },
+            { task: "Press your feet flat on the floor and your palms into the desk for 10 seconds. Feel the solidness.", q: "Where in your body did you feel the most 'solid' or strong during that press?" },
+            { task: "Hold a pencil. Move it slowly left to right, following it with ONLY your eyes. Do this 5 times.", q: "How did your eyes feel as they slowed down? Did you notice any tension release in your face?" },
+            { task: "Close your eyes. Find the furthest sound you can hear, then the closest. Switch back and forth.", q: "What was the quietest or most surprising sound you noticed in the room?" },
+            { task: "Cross your arms and hook your thumbs. Gently tap your collarbones like butterfly wings.", q: "Did the tapping feel like a steady rhythm, or did it change as you went?" },
+            { task: "Curl your toes as tight as you can inside your shoes, hold for 3 seconds, and let go. Repeat 3 times.", q: "How does the bottom of your feet feel now that the tension is gone?" },
+            { task: "Look around the room and find something that starts with A, then B, then C. Go as far as you can.", q: "Which letter was the hardest to find? How did your brain feel when you finally found it?" },
+            { task: "Touch your thumb to each finger individually, pressing firmly each time. Go forward and backward.", q: "What did the pressure against your fingertips feel like? Was it soft, hard, or tingly?" }
+           
         ];
+        
         const REWARDS = [
             { emoji: "🐢", name: "Patience Turtle", msg: "Slow and steady is a superpower." },
             { emoji: "🐱", name: "Lucky Cat", msg: "A friend for your peaceful moments." },
@@ -258,7 +268,25 @@ div#toolbox-screen.screen.active {
             "You are becoming so brave at listening to your body.",
             "You are safe, you are capable, and you are doing a great job.",
             "Giving yourself this time is a beautiful act of kindness.",
-            "Your peace is worth the effort you are putting in right now."
+            "Your peace is worth the effort you are putting in right now.",
+            "You are the boss of your brain, and you're doing a great job leading the way.",
+            "Big feelings can be like waves, but you are learning how to surf.",
+            "You are the captain of your own calm, even when the seas are a little choppy.",
+            "Feelings come and go, but you have the power to stay grounded.",
+            "You are stronger than the 'too much' feeling.",
+            "Every time you use a tool, you're building a stronger, smarter version of you.",
+            "Using your tools isn't just smart—it's a superpower.",
+            "You are becoming an expert at knowing exactly what your nervous system needs.",
+            "I'm so impressed by how you're building your very own wellness kit.",
+            "Learning to reset is a skill that will stay with you forever.",
+            "Every deep breath is a 'reset' button that only you have the power to push.",
+            "Your breath is your anchor; you can come back to it whenever you need.",
+            "One slow breath can change the whole rhythm of your day.",
+            "Inhale peace, exhale the 'too much' feeling. You've got this.",
+            "Your breath is a quiet strength that belongs entirely to you.",
+            "You deserve to feel peaceful in your body and your mind.",
+            "Giving yourself this time is the most important work you'll do today.",
+            "It's okay to press pause. Taking a break is a sign of strength."
         ];
 
         let currentUser = "";
@@ -408,19 +436,21 @@ div#toolbox-screen.screen.active {
         });
     
         // 3. Display them on the reward screen
-        content.innerHTML = `
-            <div style="font-size:80px; margin-bottom:15px;">${r.emoji}</div>
-            <h2 style="color:#2D3748; margin-bottom:10px;">${r.name}</h2>
-            
-            <div style="background: rgba(255,255,255,0.5); padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 1px dashed ${selectedTheme.color};">
-                <p style="font-style:italic; color:#2C3E50; font-size:17px; margin:0; font-weight:600;">
+    content.innerHTML = `
+            <div style="margin-bottom: 25px; padding: 15px; border-radius: 20px; background: rgba(255,255,255,0.4); border: 1px dashed ${selectedTheme.color};">
+                <p style="font-style: italic; color: #2C3E50; font-size: 18px; margin: 0; font-weight: 600; line-height: 1.4;">
                     "${randomAffirmation}"
-                </p> 
+                </p>
             </div>
     
-            <p style="font-size:13px; color:#666; line-height:1.4;">
-                <strong>Tool Tip:</strong> ${r.msg}
-            </p>
+            <div style="font-size:80px; margin-bottom:10px;">${r.emoji}</div>
+            <h2 style="color:#2D3748; margin-top:0;">You've earned: ${r.name}</h2>
+            
+            <div style="max-width: 280px; margin: 0 auto 20px auto; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.05);">
+                <p style="font-size:14px; color:#666; line-height:1.4;">
+                    <strong>How it helps:</strong> ${r.msg}
+                </p>
+            </div>
     
             <button class="main-btn" style="background:${selectedTheme.color}" onclick="showScreen('home-screen')">Collect Reward</button>
         `;
@@ -450,43 +480,43 @@ div#toolbox-screen.screen.active {
         }
 
         function showJournal() {
-    const list = document.getElementById('journal-list');
+        const list = document.getElementById('journal-list');
+        
+        list.innerHTML = inventory.length === 0 ? "<p>No entries yet!</p>" : inventory.map(i => {
+            const entryText = i.msg || i.reflection || "No details recorded";
+            const entryTitle = i.name || (i.emoji === '🏅' ? "Mission Medal" : "Entry");
     
-    list.innerHTML = inventory.length === 0 ? "<p>No entries yet!</p>" : inventory.map(i => {
-        const entryText = i.msg || i.reflection || "No details recorded";
-        const entryTitle = i.name || (i.emoji === '🏅' ? "Mission Medal" : "Entry");
-
-        return `
-            <div class="journal-card" style="display: flex; gap: 15px; align-items: flex-start;">
-                <div style="font-size:35px; min-width: 45px; text-align: center;">${i.emoji}</div>
-                
-                <div style="flex: 1; min-width: 0;"> 
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <span class="mood-tag">${i.date}</span>
-                        <span style="font-size:11px; color:${selectedTheme.color}; font-weight:bold;">
-                            ${i.before || '...'} ➔ ${i.after || '...'}
-                        </span>
+            return `
+                <div class="journal-card" style="display: flex; gap: 15px; align-items: flex-start;">
+                    <div style="font-size:35px; min-width: 45px; text-align: center;">${i.emoji}</div>
+                    
+                    <div style="flex: 1; min-width: 0;"> 
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <span class="mood-tag">${i.date}</span>
+                            <span style="font-size:11px; color:${selectedTheme.color}; font-weight:bold;">
+                                ${i.before || '...'} ➔ ${i.after || '...'}
+                            </span>
+                        </div>
+                        <div style="font-weight:bold; font-size: 15px;">${entryTitle}</div>
+                        <div style="font-size: 13px; color:#666; line-height: 1.4;">${entryText}</div>
+                       
+    
+    
+    ${i.affirmation ? `
+        <div style="color: #4A90E2; font-size: 12px; font-style: italic; margin-top: 5px; border-left: 2px solid #B2CEFE; padding-left: 8px;">
+            "${i.affirmation}"
+        </div>` : ''}
+                        ${i.reflection ? `
+                            <div class="reflection-box">
+                                <span style="font-weight:bold; color:#888; font-size:10px; text-transform:uppercase;">My Response:</span><br>
+                                "${i.reflection}"
+                            </div>` : ''}
                     </div>
-                    <div style="font-weight:bold; font-size: 15px;">${entryTitle}</div>
-                    <div style="font-size: 13px; color:#666; line-height: 1.4;">${entryText}</div>
-                   
-
-
-${i.affirmation ? `
-    <div style="color: #4A90E2; font-size: 12px; font-style: italic; margin-top: 5px; border-left: 2px solid #B2CEFE; padding-left: 8px;">
-        "${i.affirmation}"
-    </div>` : ''}
-                    ${i.reflection ? `
-                        <div class="reflection-box">
-                            <span style="font-weight:bold; color:#888; font-size:10px; text-transform:uppercase;">My Response:</span><br>
-                            "${i.reflection}"
-                        </div>` : ''}
                 </div>
-            </div>
-        `;
-    }).join('');
-    
-    showScreen('journal-screen');
+            `;
+        }).join('');
+        
+        showScreen('journal-screen');
     }
     function showToolbox() {
         const container = document.getElementById('bubbles-container');
