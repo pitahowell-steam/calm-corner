@@ -408,19 +408,21 @@ div#toolbox-screen.screen.active {
         });
     
         // 3. Display them on the reward screen
-        content.innerHTML = `
-            <div style="font-size:80px; margin-bottom:15px;">${r.emoji}</div>
-            <h2 style="color:#2D3748; margin-bottom:10px;">${r.name}</h2>
-            
-            <div style="background: rgba(255,255,255,0.5); padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 1px dashed ${selectedTheme.color};">
-                <p style="font-style:italic; color:#2C3E50; font-size:17px; margin:0; font-weight:600;">
+    content.innerHTML = `
+            <div style="margin-bottom: 25px; padding: 15px; border-radius: 20px; background: rgba(255,255,255,0.4); border: 1px dashed ${selectedTheme.color};">
+                <p style="font-style: italic; color: #2C3E50; font-size: 18px; margin: 0; font-weight: 600; line-height: 1.4;">
                     "${randomAffirmation}"
-                </p> 
+                </p>
             </div>
     
-            <p style="font-size:13px; color:#666; line-height:1.4;">
-                <strong>Tool Tip:</strong> ${r.msg}
-            </p>
+            <div style="font-size:80px; margin-bottom:10px;">${r.emoji}</div>
+            <h2 style="color:#2D3748; margin-top:0;">You've earned: ${r.name}</h2>
+            
+            <div style="max-width: 280px; margin: 0 auto 20px auto; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.05);">
+                <p style="font-size:14px; color:#666; line-height:1.4;">
+                    <strong>How it helps:</strong> ${r.msg}
+                </p>
+            </div>
     
             <button class="main-btn" style="background:${selectedTheme.color}" onclick="showScreen('home-screen')">Collect Reward</button>
         `;
